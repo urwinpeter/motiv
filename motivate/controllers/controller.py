@@ -1,15 +1,18 @@
-from motivate.model import Calculator
-from motivate.view import View, ChangerWidget
+from motivate.models.model import Calculator
+from motivate.views.home import View, EventWidget
 
 class Controller():
     def __init__(self, root):
+        # Make controller aware of models and views
         self.calc = Calculator()
-        self.calc.obs.attach(self)
         self.view1 = View(root)
-        self.view2 = ChangerWidget(root)
-        self.view2.addButton.config(command=self.AddMoney)
-        self.view2.pauseButton.config(command=self.PauseMoney)
-        self.view2.resetButton.config(command=self.ResetMoney)
+        self.view2 = EventWidget(self.view1)
+
+        # Attach controller as observer of models and views
+        self.calc.obs.attach(self)
+        self.view2.attach(self)
+
+        # Set initial earnings
         self.update(self.calc.obs.earnings, False)
           
     def AddMoney(self):
@@ -23,7 +26,7 @@ class Controller():
 
     def update(self, money, count):
         self.view1.SetMoney(money)
+        self.view2.SetCount(count)
         if count == True:
             self.view1.after(100, self.AddMoney)
             
-

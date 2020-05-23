@@ -35,7 +35,6 @@ class Observable():
     def count(self, count):
         self._count = count
         
-   
 class Calculator():
     def __init__(self):
         salary = 1_000_000

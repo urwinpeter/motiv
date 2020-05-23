@@ -1,9 +1,12 @@
 import tkinter as tk
-from motivate.controller import Controller
+from motivate.controllers.controller import Controller
 
-if __name__ == '__main__':
+def main():
     root = tk.Tk()
     root.geometry('500x500')
     root.title("Let's Get Pumped!")
     app = Controller(root)
     root.mainloop()
+
+if __name__ == "__main__":
+    main()
