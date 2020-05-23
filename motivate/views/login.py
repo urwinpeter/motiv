@@ -1,6 +1,7 @@
 import tkinter as tk
 from motivate.controllers.home import Controller
 import tkinter.messagebox as mb
+from motivate.contact import Contact
 
 class Login(tk.Frame):
     """Configures the login page widgets"""
@@ -24,10 +25,18 @@ class Login(tk.Frame):
     def SetMoney(self, value):
         pass
     
+    def attach(self, observer):
+        commands = [observer.check_user, 
+                    observer.check_pass,
+                    observer.check_salary]
+        for i, entry in enumerate(self.buttons): ### USe mapping instead
+            entry.config(validate='focusout', vcmd = commands[i])
+
     def get_details(self):
         values = [e.get() for e in self.entries]
-        try:
-            return values
+        try: 
+            contact = Contact(*values)
+            return contact
         except ValueError as e:
             mb.showerror("Validation error", str(e), parent=self)
 
@@ -50,28 +59,4 @@ class EventWidget(tk.Frame):
         for i, button in enumerate(self.buttons): ### USe mapping instead
             button.config(command=commands[i])
 
-    
-            
-    '''
-
-    def SetCount(self, count):
-        combos = {True: (tk.DISABLED, tk.ACTIVE, tk.ACTIVE),
-                False: (tk.ACTIVE, tk.DISABLED, tk.ACTIVE),
-                None: (tk.ACTIVE, tk.DISABLED, tk.DISABLED)}
-        for i, button in enumerate(self.buttons): # USe mapping instead
-            button.config(state=combos[count][i])    
-
-    def callback(self):
-        self.master.destroy()
-        Controller(self.master.master)
-
-    
-    
-    
-    def get_details(self):
-        values = [e.get() for e in self.entries]
-        try:
-            return values
-        except ValueError as e:
-            mb.showerror("Validation error", str(e), parent=self)'''
             

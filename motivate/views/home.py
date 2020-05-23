@@ -34,7 +34,7 @@ class EventWidget(tk.Frame):
             button.config(command=commands[i])
 
     def SetCount(self, count):
-        combos = {True: (tk.DISABLED, tk.ACTIVE, tk.ACTIVE),
+        combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),
                 False: (tk.ACTIVE, tk.DISABLED, tk.ACTIVE),
                 None: (tk.ACTIVE, tk.DISABLED, tk.DISABLED)}
         for i, button in enumerate(self.buttons):

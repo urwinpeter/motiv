@@ -18,14 +18,20 @@ class Controller():
         #self.update(self.calc.obs.earnings, False)
           
     def Submit(self):
-        if self.calc.check(self.view1.get_details()) == True:
-            self.view1.destroy()
-            motivate.controllers.home.Controller(self.root)
-        else:
-            print('Incorrecto')
+        contact = self.view1.get_details()
+        if contact != None:
+            if self.calc.check(contact) == True:
+                self.view1.destroy()
+                motivate.controllers.home.Controller(self.root)
+            else:
+                print('Incorrecto')
+            
 
     def Register(self):
         print("ToDo")
+
+    def check_user(self):
+        pass 
 
     def update(self, money, count):
         self.view1.SetMoney(money)

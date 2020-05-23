@@ -1,7 +1,8 @@
 class Observable():
+    
     def __init__(self):
-        self._user = 'Alan'
-        self._pass = 'pass1'
+        self._user = 'Alan@b.com'
+        self._pass = 'pass'
         self._observers = []
         
     def attach(self, observer) -> None:
@@ -36,8 +37,8 @@ class Observable():
 class Calculator():
     def __init__(self):
         self.obs = Observable()
-        
+
     def check(self, details):
-        if self.obs.username == details[0] and self.obs.password == details[1]:
+        if self.obs.username == details.username and self.obs.password == details.password:
             return True
      
