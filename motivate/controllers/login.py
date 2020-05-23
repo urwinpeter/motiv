@@ -1,13 +1,13 @@
 from motivate.models.login import Calculator
 from motivate.views.login import Login, EventWidget
 import motivate.controllers.home
-import motivate.contact
+import motivate.controllers.register
+
 
 class Controller():
     def __init__(self, root):
         # Make controller aware of models and views
         self.calc = Calculator()
-        #self.contact = motivate.contact.Contact()
         self.root = root
         self.view1 = Login(root)
         self.view2 = EventWidget(self.view1)
@@ -22,6 +22,7 @@ class Controller():
             print('Incorrecto')
     
     def Register(self):
-        print("ToDo")
+        self.view1.destroy()
+        motivate.controllers.register.Controller(self.root)
 
             

@@ -1,7 +1,5 @@
 import tkinter as tk
-from motivate.controllers.home import Controller
 import tkinter.messagebox as mb
-from motivate.contact import Contact
 
 class Login(tk.Frame):
     """Configures the login page widgets"""
