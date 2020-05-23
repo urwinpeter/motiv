@@ -1,6 +1,6 @@
 from motivate.models.register import Calculator
 from motivate.views.register import Register, EventWidget
-import motivate.controllers.home
+import motivate.controllers.login
 
 class Controller():
     def __init__(self, root):
@@ -13,5 +13,6 @@ class Controller():
         self.view2.attach(self)
          
     def Submit(self):
+        self.calc.addcontact(self.view1.get_details())
         self.view1.destroy()
-        motivate.controllers.home.Controller(self.root)
+        motivate.controllers.Login.Controller(self.root)

@@ -1,3 +1,6 @@
+from motivate.contact import Contact
+from motivate.models.database import ContactsDB
+
 class Observable():
     
     def __init__(self):
@@ -24,9 +27,11 @@ class Observable():
         
 class Calculator():
     def __init__(self):
-        self.obs = Observable()
+        #self.obs = Observable()
+        self.db = ContactsDB()
 
-    def check(self, username, password):
-        if self.obs.username == username and self.obs.password == password:
-            return True
-     
+    def addcontact(self, details):
+        self.contact = Contact(*details)
+        #except invalid formats
+        self.db.add_contact(*details)
+        print('success')
