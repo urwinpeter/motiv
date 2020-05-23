@@ -1,5 +1,6 @@
 import tkinter as tk
-from motivate.controllers.controller import Controller
+#from motivate.controllers.home(controller) import Controller
+from motivate.controllers.login import Controller
 
 def main():
     root = tk.Tk()
