@@ -14,7 +14,7 @@ class Login(tk.Frame):
         self._create_form()
         
     def _create_form(self):
-        fields = ["Username", "Password", "Salary"]
+        fields = ["Username", "Password"]
         labels = [tk.Label(self, text=f) for f in fields]
         self.entries = [tk.Entry(self, textvariable = tk.StringVar()) for _ in fields]
         self.widgets = list(zip(labels, self.entries))
@@ -22,23 +22,8 @@ class Login(tk.Frame):
             label.grid(row=i, column=0, padx=10, sticky=tk.W)
             entry.grid(row=i, column=1, padx=10, pady=5)
 
-    def SetMoney(self, value):
-        pass
-    
-    def attach(self, observer):
-        commands = [observer.check_user, 
-                    observer.check_pass,
-                    observer.check_salary]
-        for i, entry in enumerate(self.buttons): ### USe mapping instead
-            entry.config(validate='focusout', vcmd = commands[i])
-
     def get_details(self):
-        values = [e.get() for e in self.entries]
-        try: 
-            contact = Contact(*values)
-            return contact
-        except ValueError as e:
-            mb.showerror("Validation error", str(e), parent=self)
+        return [e.get() for e in self.entries]
 
 class EventWidget(tk.Frame):
     def __init__(self, master):
@@ -57,6 +42,4 @@ class EventWidget(tk.Frame):
         commands = [observer.Submit, 
                     observer.Register]
         for i, button in enumerate(self.buttons): ### USe mapping instead
-            button.config(command=commands[i])
-
-            
+            button.config(command=commands[i])     
