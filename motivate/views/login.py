@@ -1,5 +1,6 @@
 import tkinter as tk
 from motivate.controllers.home import Controller
+import tkinter.messagebox as mb
 
 class Login(tk.Frame):
     """Configures the login page widgets"""
@@ -23,6 +24,13 @@ class Login(tk.Frame):
     def SetMoney(self, value):
         pass
     
+    def get_details(self):
+        values = [e.get() for e in self.entries]
+        try:
+            return values
+        except ValueError as e:
+            mb.showerror("Validation error", str(e), parent=self)
+
 class EventWidget(tk.Frame):
     def __init__(self, master):
         self.master = master
@@ -41,6 +49,8 @@ class EventWidget(tk.Frame):
                     observer.Register]
         for i, button in enumerate(self.buttons): ### USe mapping instead
             button.config(command=commands[i])
+
+    
             
     '''
 

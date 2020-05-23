@@ -1,4 +1,4 @@
-from motivate.models.model import Calculator
+from motivate.models.home import Calculator
 from motivate.views.home import View, EventWidget
 
 class Controller():
