@@ -1,43 +1,51 @@
-import tkinter as tk
+from motivate.views.views import Form, HomeForm, EventWidget HomeEventWidget
+'''ideas - replace all 3 with one universal function
+        - replace with a class
+        - replace with contact like class
+        - replace with appstate like class
 
-class View(tk.Frame):
-    def __init__(self, master):
-        super().__init__(master, width = 30)
-        self.pack()
-        self.create_widgets()
-
-    def create_widgets(self):
-        tk.Label(self, text='My Earnings').grid(row=0, columnspan=2, column=0)
-        self.moneyCtrl = tk.Entry(self, width=8)
-        self.moneyCtrl.grid(row=0, column=2)
+class AppState():
+    def __init__(self, model, view1, view2, controller):
+        self._mvc = [model, view1, view2, controller]
         
-    def SetMoney(self, money):
-        self.moneyCtrl.delete(0,'end')
-        self.moneyCtrl.insert('end', str(money))        
+    @property
+    def details(self):
+        return self._mvc
 
-class EventWidget(tk.Frame):
-    def __init__(self, master):
-        self.master = master
-        self._create_buttons() 
-        
-    def _create_buttons(self):
-        fields = ["Start", "Pause", "Reset"]          
-        self.buttons = [tk.Button(self.master, width = 8, text = f) for f in fields]
-        for i, button in enumerate(self.buttons):
-            button.grid(row=2, column=i)
-            
-    def attach(self, observer):
-        commands = [observer.AddMoney, 
-                    observer.PauseMoney,
-                    observer.ResetMoney]
-        for i, button in enumerate(self.buttons):
-            button.config(command=commands[i])
+    @details.setter
+    def details(self, value):
+        self._mvc = value'''
 
-    def SetCount(self, count):
-        combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),
-                False: (tk.ACTIVE, tk.DISABLED, tk.ACTIVE),
-                None: (tk.ACTIVE, tk.DISABLED, tk.DISABLED)}
-        for i, button in enumerate(self.buttons):
-            button.config(state=combos[count][i])
+def start_home():
+    model = LoginCalculator()
+    fields = ['My Earnings']
+    states = ({'text':'Start'},
+            {'text':'Pause'},
+            {'text':'Reset'})
+    view1 = HomeForm(root, fields)
+    view2 = HomeEventWidget(view1, states)
+    return model, view1, view2
 
-    
+    commands = [observer.AddMoney,
+                observer.PauseMoney,
+                observer.ResetMoney]
+
+def start_login(root):
+    fields = ["Username", "Password"]
+    states = ({'text':'Submit'},
+            {'text':'Register', 'fg':'red', 'relief':'flat'}
+                  )
+    view1 = Form(root, fields)
+    view2 = EventWidget(view1, states)
+
+
+    commands = [observer.Submit, 
+                observer.Register]
+
+def start_register(root):
+    fields = ["Username", "Password", "Salary"]
+    states = ({'text':'Submit'},)
+    view1 = Form(root, fields)
+    view2 = EventWidget(states)
+
+    commands = [observer.Submit]

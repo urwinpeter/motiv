@@ -1,7 +1,6 @@
 import tkinter as tk
 import time
 
-
 class Observable():
     def __init__(self, salary):
         self._salary = salary

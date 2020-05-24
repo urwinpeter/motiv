@@ -31,8 +31,11 @@ class ContactsDB(object):
             salary = proxy.fetchone()
             return salary
     
-    def add_contact(self, user, pass_, sal):
-        _sql = f"INSERT INTO users VALUES ('{user}', '{pass_}', '{sal}')"
+    def add_contact(self, contact):
+        _sql = f"INSERT INTO users VALUES
+                ('{contact.user}', 
+                '{contact.password}', 
+                '{contact.salary}')"
         with UseDatabase() as conn:
             conn.execute(_sql)
         #except user already exists
