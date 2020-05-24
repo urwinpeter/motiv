@@ -15,4 +15,4 @@ class Controller():
     def Submit(self):
         self.calc.addcontact(self.view1.get_details())
         self.view1.destroy()
-        motivate.controllers.Login.Controller(self.root)
+        motivate.controllers.login.Controller(self.root)
