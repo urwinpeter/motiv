@@ -17,23 +17,26 @@ class LoginController(Controller):
         contact = self.view1.get_details() 
         if not contact:
             return
-        if self.calc.check(contact) == True:
-            self.view1.destroy()
-            fields = ['My Earnings']
-            states = ({'text':'Start',},
-            {'text':'Pause'},
-            {'text':'Reset'})
-            model = HomeCalculator()
-            view1 = HomeForm(self.root, fields)
-            view2 = HomeEventWidget(view1, states)
-            app = HomeController(self.root, model, view1, view2)
-            commands = [app.AddMoney,
+        try:
+            salary = self.calc.request_salary(contact)[0]
+        except TypeError:
+            self.view1.error("Incorrect Login Details")
+            return
+
+        self.view1.destroy()
+        fields = ['My Earnings']
+        states = ({'text':'Start',},
+        {'text':'Pause'},
+        {'text':'Reset'})
+        model = HomeCalculator(salary)
+        view1 = HomeForm(self.root, fields)
+        view2 = HomeEventWidget(view1, states)
+        app = HomeController(self.root, model, view1, view2)
+        commands = [app.Start,
                 app.PauseMoney,
                 app.ResetMoney]
-            view2.set_ctrl(commands)
-        else:
-            print('Incorrecto')
-
+        view2.set_ctrl(commands)
+    
     def Register(self):
         self.view1.destroy()
         fields = ["Username", "Password", "Salary"]
@@ -77,10 +80,14 @@ class HomeController(Controller):
         self.count = False
         # Set initial earnings
         self.update(self.calc.earnings.val)
+
+    def Start(self):
+        self._start_time = time.time()
+        self._AddMoney(self._start_time)
         
-    def AddMoney(self):
+    def _AddMoney(self, time):
         self.count = True
-        self.calc.addMoney()
+        self.calc.addMoney(time)
 
     def PauseMoney(self):
         self.count = False
@@ -93,5 +100,6 @@ class HomeController(Controller):
     def update(self, money):
         self.view1.SetMoney(money)
         self.view2.SetCount(self.count)
-        self.view1.after(100, lambda: self.AddMoney() if self.count == True else None)
+        self.view1.after(100, lambda: self.AddMoney(self._start_time) 
+                            if self.count == True else None)
         

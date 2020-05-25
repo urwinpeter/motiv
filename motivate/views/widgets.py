@@ -27,6 +27,9 @@ class Form(tk.Frame):
         except ValueError as e:
             mb.showerror("Validation error", str(e), parent=self)
 
+    def error(self, message):
+        mb.showerror("Error", message, parent=self)
+
 ### Do i need to define a new class here or should I just put SetMoney function in 
 ### Form classes even though it won't be applicable in some cases
 class HomeForm(Form):

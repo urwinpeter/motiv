@@ -14,19 +14,16 @@ class UseDatabase:
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.conn.close()
 
-
 class ContactsDB(object):
     def __init__(self):
-        pass
+        self.conn = UseDatabase()
 
-    def to_values(self, c):
-        return c.last_name, c.first_name, c.email, c.phone
-
-    def get_salary(self, name):
+    def get_salary(self, contact):
         _sql = f"""SELECT  salary
                  FROM users
-                 WHERE username = {name}"""
-        with UseDatabase() as conn:
+                 WHERE username = '{contact.username}'
+                 AND password = '{contact.password}' """
+        with self.conn as conn:
             proxy = conn.execute(_sql)
             salary = proxy.fetchone()
             return salary
@@ -36,10 +33,10 @@ class ContactsDB(object):
                 ('{contact.username}', 
                 '{contact.password}', 
                 '{contact.salary}')"""
-        with UseDatabase() as conn:
+        with self.conn as conn:
             conn.execute(_sql)
         #except user already exists
-
+'''
     def update_contact(self, contact):
         rowid = contact.rowid
         sql = """UPDATE contacts
@@ -54,3 +51,7 @@ class ContactsDB(object):
         sql = "DELETE FROM contacts WHERE rowid = ?"
         with self.conn:
             self.conn.execute(sql, (contact.rowid,))
+    
+    def to_values(self, c):
+        return c.last_name, c.first_name, c.email, c.phone
+'''
