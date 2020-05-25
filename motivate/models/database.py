@@ -32,10 +32,10 @@ class ContactsDB(object):
             return salary
     
     def add_contact(self, contact):
-        _sql = f"INSERT INTO users VALUES
-                ('{contact.user}', 
+        _sql = f"""INSERT INTO users VALUES
+                ('{contact.username}', 
                 '{contact.password}', 
-                '{contact.salary}')"
+                '{contact.salary}')"""
         with UseDatabase() as conn:
             conn.execute(_sql)
         #except user already exists

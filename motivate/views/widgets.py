@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.messagebox as mb
+from motivate.contact import Contact
 
 class Form(tk.Frame):
     """Configures the login page widgets"""
@@ -13,7 +14,7 @@ class Form(tk.Frame):
         
     def _create_form(self, fields):
         labels = [tk.Label(self, text=f) for f in fields]
-        self.entries = [tk.Entry(self, textvariable = tk.StringVar()) for _ in fields]
+        self.entries = [tk.Entry(self) for _ in fields]
         self.widgets = list(zip(labels, self.entries))
         for i, (label, entry) in enumerate(self.widgets): ### CREATE A FUNCTION TO REPLACE THIS REPEATED CODE?
             label.grid(row=i, column=0, padx=10, sticky=tk.W)
@@ -22,10 +23,9 @@ class Form(tk.Frame):
     def get_details(self):
         details = [e.get() for e in self.entries]
         try:
-            return Contact(details)
+            return Contact(*details)
         except ValueError as e:
-            print(str(e))
-
+            mb.showerror("Validation error", str(e), parent=self)
 
 ### Do i need to define a new class here or should I just put SetMoney function in 
 ### Form classes even though it won't be applicable in some cases
@@ -34,8 +34,8 @@ class HomeForm(Form):
         super().__init__(master, fields, width = 30)
         
     def SetMoney(self, money):
-        self.moneyCtrl.delete(0,'end')
-        self.moneyCtrl.insert('end', str(money))       
+        self.entries[0].delete(0,'end')
+        self.entries[0].insert('end', str(money))       
 
 class EventWidget(tk.Frame):
     def __init__(self, master, fields):
@@ -47,9 +47,8 @@ class EventWidget(tk.Frame):
         for i, button in enumerate(self.buttons):
             button.grid(row=len(self.master.widgets)+i, column=1, columnspan=1, padx=10)
             
-    def attach(self, observer, commands): # Get rid of this and pass commands in via states
-        # commands = [observer.Submit] THIS NEEDS MOVING TO POINT OF CALL
-        for i, button in enumerate(self.buttons): ### USe mapping instead
+    def set_ctrl(self, commands):
+        for i, button in enumerate(self.buttons): ### USe mapping instead?
             button.config(command=commands[i])
 
 class HomeEventWidget(EventWidget):

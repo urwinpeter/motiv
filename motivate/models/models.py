@@ -1,4 +1,5 @@
 import time
+from motivate.models.database import ContactsDB
 '''The inheritance in this module is currently pretty pointless...e.g. in Homcalculator 
 would be easier to just assign earning and count directly as opposed to via the super()
 constructor'''
@@ -15,10 +16,10 @@ class Observable():
     def detach(self, observer) -> None:
         self._observers.remove(observer)
 
-    def _notify(self, earnings, count) -> None:
+    def _notify(self, value) -> None:
         print("notifying observers..")
         for observer in self._observers:
-            observer.update(earnings, count)
+            observer.update(value)
 
     @property
     def val(self):
@@ -29,43 +30,32 @@ class Observable():
         self._val1 = value
         self._notify(self._val1)
         
-class Calculator():
-    def __init__(self, *args):
-        self.obs = [Observable(value) for value in args]
-        
-class HomeCalculator(Calculator)
+class HomeCalculator():
     def __init__(self):
-        super().__init__(0, True) 
         salary = 1_000_000
-        self.earnings = self.obs[0] 
-        self.count = self.obs[1]
+        self.earnings = Observable(0)
         self._rate = salary / (365 * 24 * 60 * 60)
         self._start_time = time.time()
     
     def addMoney(self):
         earnings = self._rate * (time.time() - self._start_time)
-        self.earnings = (self.earnings + earnings)
-            
-    def pauseMoney(self):
-        self.count = False
+        self.earnings.val = (self.earnings.val + earnings)
         
     def resetMoney(self):
-        self.count = None
-        self.earnings = 0
+        self.earnings.val = 0
 
-class LoginCalculator(Calculator):
+class LoginCalculator():
     def __init__(self):
-        super().__init__('Alan@b.com', 'pass')
-        self.user = self.obs[0]
-        self.pass_ = self.obs[1]
+        self.user = Observable('Alan@b.com')
+        self.pass_ = Observable('pass')
         
-    def check(self, username, password):
-        if self.user == username and self.pass_ == password:
+    def check(self, contact):
+        print(self.user.val, self.pass_.val)
+        if self.user.val == contact.username and self.pass_.val == contact.password:
             return True    
 
 class RegisterCalculator():
     def __init__(self):
-        #self.obs = Observable()
         self.db = ContactsDB()
 
     def addcontact(self, contact):
