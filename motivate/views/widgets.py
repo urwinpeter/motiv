@@ -38,7 +38,6 @@ class HomeForm(Form):
         self.entries[0].delete(0,'end')
         self.entries[0].insert('end', str(money))
     
-
 class EventWidget(tk.Frame):
     def __init__(self, master, fields):
         self.master = master
@@ -49,14 +48,35 @@ class EventWidget(tk.Frame):
         for i, button in enumerate(self.buttons):
             button.grid(row=len(self.master.widgets)+i, column=1, columnspan=1, padx=10)
             
-    def set_ctrl(self, commands):
-        for i, button in enumerate(self.buttons): ### USe mapping instead?
+class RegisterEventWidget(EventWidget):
+    def __init__(self, master, fields):
+        super().__init__(master, fields)
+     
+    def set_ctrl(self, observer):
+        commands = observer.Submit, observer.Register
+        for i, button in enumerate(self.buttons): 
+            button.config(command=commands[i])
+            button.bind("<Return>", commands[i])
+
+class LoginEventWidget(EventWidget):
+    def __init__(self, master, fields):
+        super().__init__(master, fields) 
+        
+    def set_ctrl(self, observer):
+        commands = observer.Submit, observer.Register
+        for i, button in enumerate(self.buttons): 
             button.config(command=commands[i])
             button.bind("<Return>", commands[i])
 
 class HomeEventWidget(EventWidget):
     def __init__(self, master, fields):
-        super().__init__(master, fields)
+        super().__init__(master, fields) 
+        
+    def set_ctrl(self, observer):
+        commands = observer.Start, observer.PauseMoney, observer.ResetMoney
+        for i, button in enumerate(self.buttons):
+            button.config(command=commands[i])
+            button.bind("<Return>", commands[i])
 
     def SetCount(self, count):
         combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),

@@ -8,6 +8,8 @@ class Controller():
         self.calc = model
         self.view1 = view1
         self.view2 = view2
+        # Attach controller to manage callbacks
+        view2.set_ctrl(self)
         
 class LoginController(Controller):
     def __init__(self, root, model, view1, view2):
@@ -32,18 +34,14 @@ class LoginController(Controller):
         view1 = HomeForm(self.root, fields)
         view2 = HomeEventWidget(view1, states)
         app = HomeController(self.root, model, view1, view2)
-        commands = [app.Start,
-                app.PauseMoney,
-                app.ResetMoney]
-        view2.set_ctrl(commands)
-    
+        
     def Register(self, event=None):
         self.view1.destroy()
         fields = ["Username", "Password", "Salary"]
         states = ({'text':'Submit'},)
         model = RegisterCalculator()
         view1 = Form(self.root, fields)
-        view2 = EventWidget(view1, states)
+        view2 = RegisterEventWidget(view1, states)
         app = RegisterController(self.root, model, view1, view2)
         commands = [app.Submit]
         view2.set_ctrl(commands)
@@ -65,11 +63,8 @@ class RegisterController(Controller):
                   )
         model = LoginCalculator()              
         view1 = Form(self.root, fields)
-        view2 = EventWidget(view1, states)
+        view2 = LoginEventWidget(view1, states)
         app = LoginController(self.root, model, view1, view2)
-        commands = [app.Submit, 
-                app.Register]
-        view2.set_ctrl(commands)
         
 class HomeController(Controller):
     def __init__(self, root, model, view1, view2):
