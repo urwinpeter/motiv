@@ -26,7 +26,7 @@ class Contact():
 
     @username.setter
     def username(self, value):
-        self._username = self.matches(value, self.email_regex, "Invalid Email Format")
+        self._username = matches(value, self.email_regex, "Invalid Email Format")
 
     @property
     def password(self):
@@ -34,7 +34,7 @@ class Contact():
 
     @password.setter
     def password(self, value):
-        self._password = self.matches(value, self.pass_regex, "Invalid Password Format")
+        self._password = matches(value, self.pass_regex, "Invalid Password Format")
 
     @property
     def salary(self):
@@ -42,7 +42,7 @@ class Contact():
 
     @salary.setter
     def salary(self, value):
-        self._salary = self.matches(value, self.salary_regex, "Invalid salary format")
+        self._salary = matches(value, self.salary_regex, "Invalid salary format")
 
 
 '''class NewContact():
