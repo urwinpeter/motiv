@@ -30,15 +30,14 @@ class Form(tk.Frame):
     def error(self, message):
         mb.showerror("Error", message, parent=self)
 
-### Do i need to define a new class here or should I just put SetMoney function in 
-### Form classes even though it won't be applicable in some cases
 class HomeForm(Form):
     def __init__(self, master, fields):
         super().__init__(master, fields, width = 30)
         
     def SetMoney(self, money):
         self.entries[0].delete(0,'end')
-        self.entries[0].insert('end', str(money))       
+        self.entries[0].insert('end', str(money))
+    
 
 class EventWidget(tk.Frame):
     def __init__(self, master, fields):
