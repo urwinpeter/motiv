@@ -24,14 +24,14 @@ class Observable():
 
     @val.setter
     def val(self, value):
-        self._val1 = value
-        self._notify(self._val1)
+        self._val = value
+        self._notify(self._val)
         
 class HomeCalculator():
     def __init__(self, salary):
         self.earnings = Observable(0)
         self._rate = salary / (365 * 24 * 60 * 60)
-        
+ 
     def addMoney(self, start_time):
         earnings = self._rate * (time.time() - start_time)
         self.earnings.val = (self.earnings.val + earnings)

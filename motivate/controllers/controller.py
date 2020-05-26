@@ -13,7 +13,7 @@ class LoginController(Controller):
     def __init__(self, root, model, view1, view2):
         super().__init__(root, model, view1, view2)
 
-    def Submit(self):
+    def Submit(self, event=None):
         contact = self.view1.get_details() 
         if not contact:
             return
@@ -37,7 +37,7 @@ class LoginController(Controller):
                 app.ResetMoney]
         view2.set_ctrl(commands)
     
-    def Register(self):
+    def Register(self, event=None):
         self.view1.destroy()
         fields = ["Username", "Password", "Salary"]
         states = ({'text':'Submit'},)
@@ -52,7 +52,7 @@ class RegisterController(Controller):
     def __init__(self, root, model, view1, view2):
         super().__init__(root, model, view1, view2)
 
-    def Submit(self):
+    def Submit(self, event=None):
         contact = self.view1.get_details() 
         if not contact:
             return
@@ -80,24 +80,24 @@ class HomeController(Controller):
         self.count = False
         # Set initial earnings
         self.update(self.calc.earnings.val)
-
-    def Start(self):
+   
+    def Start(self, event=None):
         self._start_time = time.time()
         self._AddMoney(self._start_time)
         
-    def _AddMoney(self, time):
+    def _AddMoney(self, time, event=None):
         self.count = True
         self.calc.addMoney(time)
 
-    def PauseMoney(self):
+    def PauseMoney(self, event=None):
         self.count = False
         self.view2.SetCount(self.count)
 
-    def ResetMoney(self):
+    def ResetMoney(self, event=None):
         self.count = None
         self.calc.resetMoney()
 
-    def update(self, money):
+    def update(self, money, event=None):
         self.view1.SetMoney(money)
         self.view2.SetCount(self.count)
         self.view1.after(100, lambda: self._AddMoney(self._start_time) 

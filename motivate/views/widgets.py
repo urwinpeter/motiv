@@ -53,6 +53,7 @@ class EventWidget(tk.Frame):
     def set_ctrl(self, commands):
         for i, button in enumerate(self.buttons): ### USe mapping instead?
             button.config(command=commands[i])
+            button.bind("<Return>", commands[i])
 
 class HomeEventWidget(EventWidget):
     def __init__(self, master, fields):
