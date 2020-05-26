@@ -10,7 +10,7 @@ def matches(value, regex, message):
         raise ValueError(message)
     return value
 
-class NewContact():
+class Contact():
     email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
     pass_regex = re.compile(r"[a-z]")
     salary_regex = re.compile(r"[0-9]")
@@ -36,7 +36,6 @@ class NewContact():
     def password(self, value):
         self._password = self.matches(value, self.pass_regex, "Invalid Password Format")
 
-
     @property
     def salary(self):
         return self._salary
@@ -46,6 +45,10 @@ class NewContact():
         self._salary = self.matches(value, self.salary_regex, "Invalid salary format")
 
 
-
+'''class NewContact():
+    def __init__(self, username='', password = '', salary = ''):
+        super().__init__(username, password)
+        self.salary = salary'''
+        
 
     
