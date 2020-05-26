@@ -100,6 +100,6 @@ class HomeController(Controller):
     def update(self, money):
         self.view1.SetMoney(money)
         self.view2.SetCount(self.count)
-        self.view1.after(100, lambda: self.AddMoney(self._start_time) 
+        self.view1.after(100, lambda: self._AddMoney(self._start_time) 
                             if self.count == True else None)
         
