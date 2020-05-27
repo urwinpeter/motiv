@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.messagebox as mb
 from motivate.contact import Contact
 
-class Form(tk.Frame):
+class Form(tk.LabelFrame):
     """Configures the login page widgets"""
     def __init__(self, master, fields, *args, **kwargs):
         # Initialise the main frame
@@ -47,6 +47,11 @@ class EventWidget(tk.Frame):
         self.buttons = [tk.Button(self.master, **f) for f in fields]
         for i, button in enumerate(self.buttons):
             button.grid(row=len(self.master.widgets)+i, column=1, columnspan=1, padx=10)
+    
+    def set_ctrl(self, commands):
+        for i, button in enumerate(self.buttons): 
+            button.config(command=commands[i])
+            button.bind("<Return>", commands[i])
             
 class RegisterEventWidget(EventWidget):
     def __init__(self, master, fields):
@@ -54,9 +59,7 @@ class RegisterEventWidget(EventWidget):
      
     def set_ctrl(self, observer):
         commands = observer.Submit, observer.Register
-        for i, button in enumerate(self.buttons): 
-            button.config(command=commands[i])
-            button.bind("<Return>", commands[i])
+        super().set_ctrl(commands)
 
 class LoginEventWidget(EventWidget):
     def __init__(self, master, fields):
@@ -64,9 +67,7 @@ class LoginEventWidget(EventWidget):
         
     def set_ctrl(self, observer):
         commands = observer.Submit, observer.Register
-        for i, button in enumerate(self.buttons): 
-            button.config(command=commands[i])
-            button.bind("<Return>", commands[i])
+        super().set_ctrl(commands)
 
 class HomeEventWidget(EventWidget):
     def __init__(self, master, fields):
@@ -74,9 +75,7 @@ class HomeEventWidget(EventWidget):
         
     def set_ctrl(self, observer):
         commands = observer.Start, observer.PauseMoney, observer.ResetMoney
-        for i, button in enumerate(self.buttons):
-            button.config(command=commands[i])
-            button.bind("<Return>", commands[i])
+        super().set_ctrl(commands)
 
     def SetCount(self, count):
         combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),

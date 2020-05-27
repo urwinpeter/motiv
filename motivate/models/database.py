@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+from motivate.contact import Contact
 
 class UseDatabase:
     """Context manager to manage connection with database"""
