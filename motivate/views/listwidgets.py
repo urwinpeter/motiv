@@ -2,7 +2,7 @@ import tkinter as tk
 
 class ItemList(tk.LabelFrame):
     def __init__(self, master, **kwargs):
-        super().__init__(master, text = 'Select an Item')
+        super().__init__(master, text = 'Select An Item')
         self.lb = tk.Listbox(self, height=14, **kwargs)
         scroll = tk.Scrollbar(self, command=self.lb.yview)
 

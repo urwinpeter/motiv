@@ -74,7 +74,7 @@ class ItemForm(Form):
     form_fields = 'Category', 'Name', 'Price, £'
     button_fields = {'text':'Update'}, {'text':'Delete'}, {'text':'Save as New'}
     def __init__(self, master, *args, **kwargs):
-        super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Modify an item or Create Your Own', **kwargs)
+        super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Modify An Item or Create Your Own', **kwargs)
 
     def get_details(self):
         details = [e.get() for e in self.entries]
