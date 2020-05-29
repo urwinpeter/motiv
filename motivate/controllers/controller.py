@@ -14,15 +14,15 @@ class Controller():
 class LoginController(Controller):
     def __init__(self, root, model, view):
         super().__init__(root, model, view)
-        self.items = list(model.get_items()) # should this be here or in _load_items
+        self.items = list(model.get_items())
         self.selection = None
-        self._load_items()
+        self._view_items()
 
-    def _load_items(self):
+    def _view_items(self):
         for c in self.items:
             self.view.add_item(c)
 
-    def create_item(self):
+    def create_item(self): 
         new_item = self.view.get_details()
         self.calc.add_item(new_item)        # Add item to DB
         self.items.append(new_item)          
@@ -38,13 +38,13 @@ class LoginController(Controller):
         print('update')
         if not self.selection:
             return
-        # Create new Item instance and override rowID  
+        # Create new Item instance and give it same rowID  
         rowid = self.items[self.selection].rowid
         updated_item = self.view.get_details()
         updated_item.rowid = rowid
         # send updated item to db:
         self.calc.update_item(updated_item)
-        self.items[self.selection] = update_item # replace item with updated item in self.items list
+        self.items[self.selection] = updated_item # replace item with updated item in self.items list
         self.view.update_item(item, self.selection) # display the update item in listbox at appropriate index position
 
     def delete_item(self):
@@ -55,31 +55,31 @@ class LoginController(Controller):
         self.calc.delete_item(item)
         self.view.remove_item(self.selection)
 
-    #def set_item(self): # should i add instance of item class and setters/getters?
-        #print('setting')
-
     def load_homepage(self):
         print('load')
-        model = HomeCalculator(self.view.get_salary())
+        item = self.view.get_details()
+        model = HomeCalculator(self.view.get_salary(), item)
         self.view.destroy()
         view = HomePage(self.root)
-        app = HomeController(self.root, model, view, int(self.items[self.selection].cost))
+        app = HomeController(self.root, model, view, item)
 
 class HomeController(Controller):
-    def __init__(self, root, model, view, target):
+    def __init__(self, root, model, view, item):
         super().__init__(root, model, view)
         # Attach controller as observer of earnings
         self.calc.earnings.attach(self)
         # Set initial counting state
         self.count = False
         # Set initial earnings
-        self.calc.set_target(target)
         self.update(self.calc.earnings.val)
+        self.item = item 
+        self.view.set_target(item.price)
         
         # Attach controller to manage callbacks 
         #self.quote = self.calc.get_quote()
-        #self.view.display_quote(self.quote)      
-    
+        #self.view.display_quote(self.quote)   
+
+           
     ######
     #CALLED FROM VIEW
     ######
@@ -87,67 +87,30 @@ class HomeController(Controller):
         self._start_time = time.time()
         self._AddMoney(self._start_time)
         
-    def _AddMoney(self, time, event=None):
+    def _AddMoney(self, time):
         self.count = True
         self.calc.addMoney(time)
+        self.view.update_count(self.count)
 
     def PauseMoney(self, event=None):
         self.count = False
-        self.view.SetCount(self.count)
+        self.view.update_count(self.count)
 
     def ResetMoney(self, event=None):
         self.count = None
         self.calc.resetMoney()
+        self.view.update_count(self.count)
 
     ######
     #CALLED FROM MODEL
     ######
-    def update(self, money, event=None):
-        self.view.SetMoney(money)
-        self.view.SetCount(self.count)
-        self.view.after(100, lambda: self._AddMoney(self._start_time) 
-                            if self.count == True else None)
+    def update(self, money):
+        self.view.update_money(money)
+        self.view.after(100, lambda _: self._AddMoney(self._start_time) 
+                            if self.count == True  else None) # or use observer.attach/detach in pausemoney/resetmoney etc
     
-    def complete(self):
-        self.view.congrats()
-
-    def set_target(self, value):
-        self.view.set_target(value)
-
-    '''def Submit(self, event=None):
-        item = self.view.get_details() 
-        if not item:
-            return
-        try:
-            salary = self.calc.request_salary(item)[0]
-        except TypeError:
-            self.view.error("Incorrect Login Details")
-            return'''
-
-        
-class RegisterController(Controller):
-    def __init__(self, root, model, view1, view2):
-        super().__init__(root, model, view1, view2)
-
-    def Submit(self, event=None):
-        item = self.view1.get_details() 
-        if not item:
-            return
-        self.calc.additem(item)
-        self.view1.destroy()
-
-        fields = ["Username", "Password"]
-        states = ({'text':'Submit'},
-            {'text':'Register', 'fg':'red', 'relief':'flat'}
-                  )
-        model = LoginCalculator()              
-        view1 = Form(self.root, fields)
-        view2 = LoginEventWidget(view1, states)
-        app = LoginController(self.root, model, view1, view2)
-        
-
-
-
-
-
-
+    def mission_accomplished(self, money):
+        self.view.update_money(money)
+        self.view.update_count(self.count) ##change this to False?
+        self.view.display_congrats(self.item)
+        #observer.detach?

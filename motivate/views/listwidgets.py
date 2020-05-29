@@ -10,7 +10,7 @@ class ItemList(tk.LabelFrame):
         scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.lb.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
-    def insert(self, item, index=0):
+    def insert(self, item, index=tk.END):
         text = f"{item.category}, {item.name}, {item.cost}"
         self.lb.insert(index, text)
 

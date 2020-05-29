@@ -13,12 +13,12 @@ def matches(value, regex, message):
 class Item():
     category_regex = re.compile(r"[a-z]")
     name_regex = re.compile(r"[^@]")
-    cost_regex = re.compile(r"[0-9]")
+    price_regex = re.compile(r"[0-9]")
 
-    def __init__(self, category='', name='', cost=''):
+    def __init__(self, category='', name='', price=''):
         self.category = category # should I be underscoring these
         self.name = name
-        self.cost = cost
+        self.price = price
         
     @property
     def category(self):
@@ -37,9 +37,9 @@ class Item():
         self._name = matches(value, self.name_regex, "Invalid Name Format")
 
     @property
-    def cost(self):
-        return self._cost
+    def price(self):
+        return self._price
 
-    @cost.setter
-    def cost(self, value):
-        self._cost = matches(value, self.cost_regex, "Invalid Cost format")
+    @price.setter
+    def price(self, value):
+        self._price = matches(value, self.price_regex, "Invalid price format")

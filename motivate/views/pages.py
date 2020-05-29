@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messageboc as mb
 from motivate.views.formwidgets import HomeForm, SalaryForm, ItemForm
 from motivate.views.listwidgets import ItemList
 from motivate.views.canvaswidgets import Pie
@@ -15,7 +16,8 @@ class LoginPage(tk.Frame):
         self._pack()
 
     def _pack(self):
-        self.pack()    
+        self.pack() # Pack Login Page Inside Tk 
+        # Pack the remaining widgets inside Login Page
         self.list.pack(side=tk.LEFT, padx=10, pady=10)
         self.itemform.pack(padx=10, pady=10)
         self.salaryform.pack(pady=10)
@@ -26,24 +28,23 @@ class LoginPage(tk.Frame):
         self.itemform.bind_update(control.update_item)
         self.itemform.bind_delete(control.delete_item)
         self.itemform.bind_save(control.create_item)
-        ## need to bind itemform.bind_set()
         self.bind_next(control.load_homepage)
 
     def bind_next(self, callback):
         self.next_button.config(command=callback)
         self.next_button.bind('<Return>', callback)
 
-    def add_item(self, item): # change name to add to list?
+    def add_item(self, item):
         self.list.insert(item)
 
     def update_item(self, item, index):
         self.list.update(item, index)
 
     def remove_item(self, index):
-        self.itemform.clear()
+        self.itemform.clear_details()
         self.list.delete(index)
 
-    def get_details(self):
+    def get_details(self): # change to get_item_details?
         return self.itemform.get_details()
 
     def load_details(self, item):
@@ -55,10 +56,10 @@ class LoginPage(tk.Frame):
 class HomePage(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
-        #root.wm_title("Progress")
+        # root.wm_title("Progress")
         root.title("Progress")
         self.form = HomeForm(self)
-        #self.text = tk.message(self)
+        self.text = tk.message(self)
         self.canvas = Pie(self)
         self._pack()
     
@@ -73,19 +74,16 @@ class HomePage(tk.Frame):
         self.form.bind_pause(control.PauseMoney)
         self.form.bind_reset(control.ResetMoney)
 
-    def display_quote(self, quote):
-        self.text.config(text = quote)
-
-    def SetMoney(self, money):
-        self.form.SetMoney(money)
-        self.canvas.SetMoney(money)
-        
-    def SetCount(self, count):
-        self.form.SetCount(count)
-
-    def congrats(self):
-        mb.showinfo(self, "congrats")
-
     def set_target(self, value):
         self.canvas.set_target(value)
         self.form.set_target(value)
+
+    def update_money(self, money):
+        self.form.update_money(money)
+        self.canvas.update_chart(money)
+        
+    def update_count(self, count):
+        self.form.active_buttons(count)
+
+    def display_congrats(self, item):
+        mb.showinfo(self, f"congrats, {item.name}")
