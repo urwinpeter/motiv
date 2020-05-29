@@ -5,8 +5,8 @@ Virtual Piggy Bank.
 
 ```
 virtualenv -p python3 venv
-source venv/bin/activate
-python -m motivate
+source venv/bin/activate 
+python -m motivate (from within motiv folder)
 pip install -r requirements.txt
 ```
 

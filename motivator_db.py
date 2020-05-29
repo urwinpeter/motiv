@@ -3,7 +3,7 @@ import sqlalchemy as sa
 class UseDatabase():
     """Context manager to manage connection with database"""
     def __init__(self):
-        self.engine = sa.create_engine('sqlite:///motivate.db')
+        self.engine = sa.create_engine('sqlite:///items.db')
 
     def __enter__(self):
         self.conn = self.engine.connect() 
@@ -12,10 +12,15 @@ class UseDatabase():
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.conn.close()
 
+'''_sql = 'DROP TABLE items'
+
+with UseDatabase() as conn:
+    conn.execute(_sql)'''
+
 _sql = '''CREATE TABLE items
         (category varchar(255),
         name varchar(255),
-        price float()'''
+        price float(255))'''
 
 with UseDatabase() as conn:
     conn.execute(_sql)
@@ -35,5 +40,6 @@ items = {'Shoes':(('Running Shoes',100),
 
 _sql = 'INSERT INTO items VALUES (?,?,?)'
 with UseDatabase() as conn:
-    for key, values in items:
-            conn.execute(_sql, key, value[0], value[1])
+    for key, values in items.items():
+            for value in values:
+                conn.execute(_sql, key, value[0], value[1])

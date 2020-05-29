@@ -14,11 +14,12 @@ class Controller():
 class LoginController(Controller):
     def __init__(self, root, model, view):
         super().__init__(root, model, view)
-        self.items = list(model.get_items())
+        self.items = [] # Do I need this>?
         self.selection = None
         self._view_items()
 
     def _view_items(self):
+        self.items = list(self.calc.get_items())
         for c in self.items:
             self.view.add_item(c)
 
@@ -45,7 +46,7 @@ class LoginController(Controller):
         # send updated item to db:
         self.calc.update_item(updated_item)
         self.items[self.selection] = updated_item # replace item with updated item in self.items list
-        self.view.update_item(item, self.selection) # display the update item in listbox at appropriate index position
+        self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
 
     def delete_item(self):
         print('delete')
@@ -53,8 +54,9 @@ class LoginController(Controller):
             return
         item = self.items[self.selection]
         self.calc.delete_item(item)
-        self.view.remove_item(self.selection)
-
+        self.view.remove_items()
+        self._view_items()
+        
     def load_homepage(self):
         print('load')
         item = self.view.get_details()
@@ -71,13 +73,14 @@ class HomeController(Controller):
         # Set initial counting state
         self.count = False
         # Set initial earnings
+        self.view.set_target(float(item.price))
         self.update(self.calc.earnings.val)
         self.item = item 
-        self.view.set_target(item.price)
+        
         
         # Attach controller to manage callbacks 
-        #self.quote = self.calc.get_quote()
-        #self.view.display_quote(self.quote)   
+        self.quote = self.calc.get_quote()
+        self.view.display_quote(self.quote)   
 
            
     ######
@@ -106,7 +109,7 @@ class HomeController(Controller):
     ######
     def update(self, money):
         self.view.update_money(money)
-        self.view.after(100, lambda _: self._AddMoney(self._start_time) 
+        self.view.after(100, lambda : self._AddMoney(self._start_time) 
                             if self.count == True  else None) # or use observer.attach/detach in pausemoney/resetmoney etc
     
     def mission_accomplished(self, money):

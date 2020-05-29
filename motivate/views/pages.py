@@ -1,5 +1,5 @@
 import tkinter as tk
-import tkinter.messageboc as mb
+import tkinter.messagebox as mb
 from motivate.views.formwidgets import HomeForm, SalaryForm, ItemForm
 from motivate.views.listwidgets import ItemList
 from motivate.views.canvaswidgets import Pie
@@ -40,9 +40,9 @@ class LoginPage(tk.Frame):
     def update_item(self, item, index):
         self.list.update(item, index)
 
-    def remove_item(self, index):
+    def remove_items(self):
         self.itemform.clear_details()
-        self.list.delete(index)
+        self.list.clear()
 
     def get_details(self): # change to get_item_details?
         return self.itemform.get_details()
@@ -59,13 +59,13 @@ class HomePage(tk.Frame):
         # root.wm_title("Progress")
         root.title("Progress")
         self.form = HomeForm(self)
-        self.text = tk.message(self)
+        self.quote = tk.Message(self, width=300, justify =tk.CENTER, font = ("Helvetica", 16, "bold italic"))
         self.canvas = Pie(self)
         self._pack()
     
     def _pack(self):
         self.pack()
-        #self.text.pack()
+        self.quote.pack()
         self.form.pack()
         self.canvas.pack()
 
@@ -87,3 +87,6 @@ class HomePage(tk.Frame):
 
     def display_congrats(self, item):
         mb.showinfo(self, f"congrats, {item.name}")
+
+    def display_quote(self, quote):
+        self.quote.config(text = quote)

@@ -1,5 +1,4 @@
 import tkinter as tk
-from motivate.views.eventwidgets import HomeEventWidget, ItemEventWidget, SetSalaryEventWidget
 from motivate.item import Item
 
 class Form(tk.LabelFrame):
@@ -42,8 +41,8 @@ class HomeForm(Form):
     button_fields = {'text':'Start'}, {'text':'Pause'},{'text':'Reset'}
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, self.form_fields, self.button_fields, *args, **kwargs)
-        self.text = tk.Message(self)
-        self.text.grid(row=len(self.widgets)+1, column = 2)
+        self.text = tk.Message(self, width = 100)
+        self.text.grid(row=len(self.widgets)-1, column = 2)
 
     def update_money(self, money):
         self.entries[0].delete(0,'end')
@@ -73,9 +72,9 @@ class HomeForm(Form):
 
 class ItemForm(Form):
     form_fields = 'Category', 'Name', 'Price, £'
-    button_fields = {'text':'Update'}, {'text':'Delete'}, {'text':'Save'}
+    button_fields = {'text':'Update'}, {'text':'Delete'}, {'text':'Save as New'}
     def __init__(self, master, *args, **kwargs):
-        super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Or Create Your Own', **kwargs)
+        super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Modify an item or Create Your Own', **kwargs)
 
     def get_details(self):
         details = [e.get() for e in self.entries]
@@ -86,7 +85,7 @@ class ItemForm(Form):
 
     def load_details(self, item):
         values = (item.category, item.name,
-                  item.cost)
+                  item.price)
         for entry, value in zip(self.entries, values):
             entry.delete(0, tk.END)
             entry.insert(0, value)
@@ -107,6 +106,3 @@ class ItemForm(Form):
         self.buttons[2].config(command=callback)
         self.buttons[0].bind('<Return>', callback)
 
-    def bind_set(Self, callback):
-        self.buttons[3].config(command=callback)
-        self.buttons[0].bind('<Return>', callback)

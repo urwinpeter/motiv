@@ -11,11 +11,14 @@ class ItemList(tk.LabelFrame):
         self.lb.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
     def insert(self, item, index=tk.END):
-        text = f"{item.category}, {item.name}, {item.cost}"
+        text = f"{item.category}, {item.name}, {item.price}"
         self.lb.insert(index, text)
 
     def delete(self, index):
         self.lb.delete(index, index)
+
+    def clear(self):
+        self.lb.delete(0, tk.END)
 
     def update(self, item, index):
         self.delete(index)
