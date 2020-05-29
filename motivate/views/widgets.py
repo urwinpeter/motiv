@@ -30,6 +30,8 @@ class Form(tk.LabelFrame):
     def error(self, message):
         mb.showerror("Error", message, parent=self)
 
+
+
 class HomeForm(Form):
     def __init__(self, master, fields):
         super().__init__(master, fields, width = 30)
@@ -83,3 +85,5 @@ class HomeEventWidget(EventWidget):
                 None: (tk.ACTIVE, tk.DISABLED, tk.DISABLED)}
         for i, button in enumerate(self.buttons):
             button.config(state=combos[count][i])
+
+
