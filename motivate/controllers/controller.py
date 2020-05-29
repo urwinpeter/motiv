@@ -30,13 +30,11 @@ class LoginController(Controller):
         self.view.add_item(new_item)        # Display item in listbox
         
     def select_item(self, index):
-        print('select')
         self.selection = index
         item = self.items[index]
         self.view.load_details(item)
 
     def update_item(self):
-        print('update')
         if not self.selection:
             return
         # Create new Item instance and give it same rowID  
@@ -49,7 +47,6 @@ class LoginController(Controller):
         self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
 
     def delete_item(self):
-        print('delete')
         if not self.selection:
             return
         item = self.items[self.selection]
@@ -58,7 +55,6 @@ class LoginController(Controller):
         self._view_items()
         
     def load_homepage(self):
-        print('load')
         item = self.view.get_details()
         model = HomeCalculator(self.view.get_salary(), item)
         self.view.destroy()

@@ -1,9 +1,11 @@
 import tkinter as tk
+import locale
 
 class ItemList(tk.LabelFrame):
+    currency_sym = locale.localeconv()["currency_symbol"]
     def __init__(self, master, **kwargs):
         super().__init__(master, text = 'Select An Item')
-        self.lb = tk.Listbox(self, height=14, **kwargs)
+        self.lb = tk.Listbox(self, height=14, width =6, **kwargs)
         scroll = tk.Scrollbar(self, command=self.lb.yview)
 
         self.lb.config(yscrollcommand=scroll.set)
@@ -11,7 +13,7 @@ class ItemList(tk.LabelFrame):
         self.lb.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
     def insert(self, item, index=tk.END):
-        text = f"{item.category}, {item.name}, {item.price}"
+        text = f"{item.category}, {item.name}, {locale.currency(item.price)}"
         self.lb.insert(index, text)
 
     def delete(self, index):

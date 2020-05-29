@@ -50,25 +50,3 @@ class HomeCalculator():
 
     def get_quote(self):
         return self.db.get_quote()
-
-
-class LoginCalculator():
-    def __init__(self):
-        self.db = ContactsDB()
-      
-    def request_salary(self, contact):
-        salary = self.db.get_salary(contact)
-        print(salary)
-        return salary
-
-    def get_items(self):
-        return self.db.get_contacts()
-        
-class RegisterCalculator():
-    def __init__(self):
-        self.db = ContactsDB()
-
-    def addcontact(self, contact):
-        self.db.add_contact(contact)
-        print('DB success')
-

@@ -1,7 +1,10 @@
 import tkinter as tk
+import locale
 from motivate.item import Item
 
+
 class Form(tk.LabelFrame):
+    currency_sym = locale.localeconv()["currency_symbol"]
     """Configures the login page widgets"""
     def __init__(self, master, form_fields, button_fields, *args, **kwargs):
         # Initialise the main frame
@@ -24,7 +27,7 @@ class Form(tk.LabelFrame):
             button.grid(row=len(self.widgets)+1, column=i, padx=1)
     
 class SalaryForm(Form):
-    form_fields = 'Annual Salary, £', # set to locale currency
+    form_fields = f'Annual Salary, {self.currency_sym}', 
     button_fields = []
 
     def __init__(self, master, *args, **kwargs):
@@ -37,7 +40,7 @@ class SalaryForm(Form):
         return float(self.entries[0].get())
     
 class HomeForm(Form):
-    form_fields = 'Earnings, £',
+    form_fields = f'Earnings',
     button_fields = {'text':'Start'}, {'text':'Pause'},{'text':'Reset'}
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, self.form_fields, self.button_fields, *args, **kwargs)
@@ -45,8 +48,8 @@ class HomeForm(Form):
         self.text.grid(row=len(self.widgets)-1, column = 2)
 
     def update_money(self, money):
-        self.entries[0].delete(0,'end')
-        self.entries[0].insert('end', str(money))
+        self.entries[0].delete(0,'end') #tk.END?
+        self.entries[0].insert('end', str(locale.currency(money))) # Do i need the str?
 
     def active_buttons(self, count): # Is this a fishy for loop too? should I pass it each button individually? via the assign callbacks?
         combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),
@@ -56,7 +59,7 @@ class HomeForm(Form):
             button.config(state=combos[count][i])
 
     def set_target(self, value):
-        self.text.config(text = f'/£{value}')
+        self.text.config(text = f'/{locale.currency(value)}')
 
     def bind_start(self, callback):
         self.buttons[0].config(command = callback)
@@ -71,7 +74,7 @@ class HomeForm(Form):
         self.buttons[2].bind('<Return>', callback)
 
 class ItemForm(Form):
-    form_fields = 'Category', 'Name', 'Price, £'
+    form_fields = 'Category', 'Name', f'Price, {self.currency_sym}'
     button_fields = {'text':'Update'}, {'text':'Delete'}, {'text':'Save as New'}
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Modify An Item or Create Your Own', **kwargs)

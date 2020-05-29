@@ -58,6 +58,7 @@ class HomePage(tk.Frame):
         super().__init__(root)
         # root.wm_title("Progress")
         root.title("Progress")
+        self.root = root
         self.form = HomeForm(self)
         self.quote = tk.Message(self, width=300, justify =tk.CENTER, font = ("Helvetica", 16, "bold italic"))
         self.canvas = Pie(self)
@@ -86,7 +87,9 @@ class HomePage(tk.Frame):
         self.form.active_buttons(count)
 
     def display_congrats(self, item):
-        mb.showinfo(self, f"congrats, {item.name}")
+        mb.showinfo(self, title = 'CONGRATULATIONS',
+                    message = f"Time to enjoy the following: {item.name}")
+        self.root.destroy()
 
     def display_quote(self, quote):
         self.quote.config(text = quote)
