@@ -2,7 +2,6 @@ import tkinter as tk
 import locale
 from motivate.item import Item
 
-
 class Form(tk.LabelFrame):
     currency_sym = locale.localeconv()["currency_symbol"]
     """Configures the login page widgets"""
@@ -42,9 +41,9 @@ class SalaryForm(Form):
 class HomeForm(Form):
     form_fields = f'Earnings',
     button_fields = {'text':'Start'}, {'text':'Pause'},{'text':'Reset'}
-    def __init__(self, master, *args, **kwargs):
+    def __init__(self, master, price, *args, **kwargs):
         super().__init__(master, self.form_fields, self.button_fields, *args, **kwargs)
-        self.text = tk.Message(self, width = 100)
+        self.text = tk.Message(self, text = f'/{locale.currency(price)}', width = 100)
         self.text.grid(row=len(self.widgets)-1, column = 2)
 
     def update_money(self, money):
@@ -57,9 +56,6 @@ class HomeForm(Form):
                 None: (tk.ACTIVE, tk.DISABLED, tk.DISABLED)}
         for i, button in enumerate(self.buttons):
             button.config(state=combos[count][i])
-
-    def set_target(self, value):
-        self.text.config(text = f'/{locale.currency(value)}')
 
     def bind_start(self, callback):
         self.buttons[0].config(command = callback)

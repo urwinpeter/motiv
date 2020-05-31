@@ -5,8 +5,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 class Pie(tk.Frame):
     explode = (0.1, 0)  # only "explode" the 1st slice
     colours = ['#0066CC','#DDDDDD']
-    def __init__(self, master):
+    def __init__(self, master, price):
         super().__init__(master)
+        self.price = price
         self.fig = Figure(figsize=(2, 2), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
          
@@ -16,10 +17,7 @@ class Pie(tk.Frame):
     def _pack(self):
         self.pack()
         self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-    def set_target(self, value):
-        self.price = value    
-
+    
     def update_chart(self, money):
         ratio = money/self.price
         self.ax.clear()

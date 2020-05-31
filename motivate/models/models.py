@@ -1,5 +1,4 @@
 import time
-from motivate.models.database import QuotesDB
 
 class Observable():
     def __init__(self, value, item):
@@ -37,7 +36,6 @@ class Observable():
         
 class HomeCalculator():
     def __init__(self, salary, item):
-        self.db = QuotesDB()
         self.earnings = Observable(0, item)
         self._rate = salary / (365 * 24 * 60 * 60)
          
@@ -48,5 +46,5 @@ class HomeCalculator():
     def resetMoney(self):
         self.earnings.val = 0
 
-    def get_quote(self):
-        return self.db.get_quote()
+    def set_user_vars(self, salary, price):
+        self.earnings = Obser

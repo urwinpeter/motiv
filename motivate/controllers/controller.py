@@ -1,25 +1,33 @@
+from motivate.models.models import HomeCalculator
+from motivate.models.database import ItemsDB, QuotesDB
+from motivate.views.pages import LoginPage, HomePage
 
-from motivate.models.models import *
-from motivate.views.pages import HomePage
+class PageController():
+    def __init__(self):
+        self.login = LoginController(self)
+        self.home = HomeController(self)
 
-class Controller():
-    def __init__(self, root, model, view):
-        # Make controller aware of models and views
-        self.root = root # should i set this as a class variable since it will be same for all instances?
-        self.calc = model
-        self.view = view
-        # Attach controller to manage callbacks
+    def start_login(self):
+        self.login.view.start()
+
+    def pass_control(self, salary, item):
+        salary = self.login.view.get_salary()
+        item = self.login.view.get_details()
+        self.login.view.destroy()
+        self.home.load(salary, item)
+  
+class LoginController():
+    def __init__(self, parent):
+        self.parent = parent
+        self.calc = ItemsDB()              
+        self.view = LoginPage()
         self.view.assign_callbacks(self)
         
-class LoginController(Controller):
-    def __init__(self, root, model, view):
-        super().__init__(root, model, view)
-        self.items = [] # Do I need this>?
+        self.items = list(self.calc.get_items())
         self.selection = None
         self._view_items()
 
-    def _view_items(self):
-        self.items = list(self.calc.get_items())
+    def _view_items(self): 
         for c in self.items:
             self.view.add_item(c)
 
@@ -54,31 +62,23 @@ class LoginController(Controller):
         self.view.remove_items()
         self._view_items()
         
-    def load_homepage(self):
-        item = self.view.get_details()
-        model = HomeCalculator(self.view.get_salary(), item)
-        self.view.destroy()
-        view = HomePage(self.root)
-        app = HomeController(self.root, model, view, item)
+class HomeController():
+    def __init__(self, parent):
+        self.parent = parent
 
-class HomeController(Controller):
-    def __init__(self, root, model, view, item):
-        super().__init__(root, model, view)
-        # Attach controller as observer of earnings
+    def load(self, salary, item):
+        price = float(item.price)
+        quote = QuotesDB().get_quote()
+        self.calc = HomeCalculator(salary, price)
         self.calc.earnings.attach(self)
-        # Set initial counting state
+        self.view = HomePage(quote, price)
+        self.view.assign_callbacks(self) # Assign controller to manage callbacks 
+        
+        # Set initial counting state and earnings value
         self.count = False
-        # Set initial earnings
-        self.view.set_target(float(item.price))
-        self.update(self.calc.earnings.val)
-        self.item = item 
-        
-        
-        # Attach controller to manage callbacks 
-        self.quote = self.calc.get_quote()
-        self.view.display_quote(self.quote)   
-
-           
+        self.update(0) # could i mitigate this by setting it to 0 in view from get go?
+        self.item = item
+             
     ######
     #CALLED FROM VIEW
     ######
@@ -111,5 +111,5 @@ class HomeController(Controller):
     def mission_accomplished(self, money):
         self.view.update_money(money)
         self.view.update_count(self.count) ##change this to False?
-        self.view.display_congrats(self.item)
-        #observer.detach?
+        self.view.display_congrats(self.item) # this is the second time i've passed item to view. should I just pass it once
+        #observer.detach? # or cahnge this to self.item.name

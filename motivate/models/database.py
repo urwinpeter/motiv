@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from motivate.item import Item
 
-class UseDatabase:
+class UseDatabase():
     """Context manager to manage connection with database"""
     def __init__(self, db_config):
         self.engine = sa.create_engine(db_config)
@@ -53,7 +53,7 @@ class ItemsDB():
         with self.conn as conn:
             conn.execute(sql, (item.rowid,))
 
-class QuotesDB():
+class QuotesDB():  ###is this a bit overkill? should I just put a get_quote functioninto Homecalculator and use with USedatabase as...
     config = 'sqlite:///motivate/models/quotes.db'
     def __init__(self):
         self.conn = UseDatabase(self.config)

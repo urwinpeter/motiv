@@ -4,8 +4,10 @@ from motivate.views.formwidgets import HomeForm, SalaryForm, ItemForm
 from motivate.views.listwidgets import ItemList
 from motivate.views.canvaswidgets import Pie
 
+root = tk.Tk()
+
 class LoginPage(tk.Frame):
-    def __init__(self, root):
+    def __init__(self):
         super().__init__(root)
         root.title("Settings")
         root.geometry('700x350')
@@ -15,6 +17,9 @@ class LoginPage(tk.Frame):
         self.next_button = tk.Button(self, text='Next >')
         self._pack()
 
+    def start(self):
+        root.mainloop() # This seems a bit hidden away here for an important function
+    
     def _pack(self):
         self.pack() # Pack Login Page Inside Tk 
         # Pack the remaining widgets inside Login Page
@@ -28,7 +33,7 @@ class LoginPage(tk.Frame):
         self.itemform.bind_update(control.update_item)
         self.itemform.bind_delete(control.delete_item)
         self.itemform.bind_save(control.create_item)
-        self.bind_next(control.load_homepage)
+        self.bind_next(control.parent.pass_control)
 
     def bind_next(self, callback):
         self.next_button.config(command=callback)
@@ -54,14 +59,14 @@ class LoginPage(tk.Frame):
         return self.salaryform.get_details()
 
 class HomePage(tk.Frame):
-    def __init__(self, root):
+    def __init__(self, quote, price):
         super().__init__(root)
         # root.wm_title("Progress")
         root.title("Progress")
         self.root = root
-        self.form = HomeForm(self)
-        self.quote = tk.Message(self, width=300, justify =tk.CENTER, font = ("Helvetica", 16, "bold italic"))
-        self.canvas = Pie(self)
+        self.form = HomeForm(self, price)
+        self.quote = tk.Message(self, text = quote, width=300, justify =tk.CENTER, font = ("Helvetica", 16, "bold italic"))
+        self.canvas = Pie(self, price)
         self._pack()
     
     def _pack(self):
@@ -75,10 +80,6 @@ class HomePage(tk.Frame):
         self.form.bind_pause(control.PauseMoney)
         self.form.bind_reset(control.ResetMoney)
 
-    def set_target(self, value):
-        self.canvas.set_target(value)
-        self.form.set_target(value)
-
     def update_money(self, money):
         self.form.update_money(money)
         self.canvas.update_chart(money)
@@ -89,7 +90,4 @@ class HomePage(tk.Frame):
     def display_congrats(self, item):
         mb.showinfo(self, title = 'CONGRATULATIONS',
                     message = f"Time to enjoy the following: {item.name}")
-        self.root.destroy()
-
-    def display_quote(self, quote):
-        self.quote.config(text = quote)
+        root.destroy()
