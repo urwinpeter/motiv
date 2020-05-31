@@ -1,10 +1,10 @@
 import time
 
 class Observable():
-    def __init__(self, value, item):
+    def __init__(self, value, target):
         self._observers = []
         self._val = value
-        self._target = float(item.price) 
+        self._target = target
 
     def attach(self, observer) -> None:
         print("attached observer " + str(observer))
@@ -35,8 +35,8 @@ class Observable():
             self._notify_complete()
         
 class HomeCalculator():
-    def __init__(self, salary, item):
-        self.earnings = Observable(0, item)
+    def __init__(self, salary, target):
+        self.earnings = Observable(0, target)
         self._rate = salary / (365 * 24 * 60 * 60)
          
     def addMoney(self, start_time):

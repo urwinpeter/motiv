@@ -1,3 +1,4 @@
+import time
 from motivate.models.models import HomeCalculator
 from motivate.models.database import ItemsDB, QuotesDB
 from motivate.views.pages import LoginPage, HomePage
@@ -10,11 +11,14 @@ class PageController():
     def start_login(self):
         self.login.view.start()
 
-    def pass_control(self, salary, item):
+    def pass_control(self):
         salary = self.login.view.get_salary()
         item = self.login.view.get_details()
         self.login.view.destroy()
         self.home.load(salary, item)
+
+    def terminate(self):
+        self.home.view.root.destroy() # is this sort of format ok?
   
 class LoginController():
     def __init__(self, parent):
@@ -109,7 +113,8 @@ class HomeController():
                             if self.count == True  else None) # or use observer.attach/detach in pausemoney/resetmoney etc
     
     def mission_accomplished(self, money):
+        self.count = False
         self.view.update_money(money)
-        self.view.update_count(self.count) ##change this to False?
-        self.view.display_congrats(self.item) # this is the second time i've passed item to view. should I just pass it once
-        #observer.detach? # or cahnge this to self.item.name
+        self.view.update_count(False) 
+        self.view.display_congrats(self.item.name)
+        self.parent.terminate() 

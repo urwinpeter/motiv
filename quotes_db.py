@@ -24,7 +24,7 @@ _sql = '''CREATE TABLE quotes
 with UseDatabase() as conn:
     conn.execute(_sql)
 
-quotes = ("\"I've missed more than 9,000 shots in my career. I've lost almost 300 games. Twenty-six times, I've been trusted to take the game winning shot and missed. I've failed over and over and over again in my life. And that is why I succeed.\" - Michael Jordan",
+quotes = ("\"I've failed over and over and over again in my life. And that is why I succeed.\" - Michael Jordan",
         "\"Think you can, think you can't; either way you'll be right.\" - Henry Ford",
         "\"An expert is a man who has made all the mistakes which can be made, in a very narrow field\" - Neils Bohr",
         "\"Everything you've ever wanted is on the other side of fear\" - George Addair")

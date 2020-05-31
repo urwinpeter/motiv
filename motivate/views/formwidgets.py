@@ -2,8 +2,10 @@ import tkinter as tk
 import locale
 from motivate.item import Item
 
+locale.setlocale(locale.LC_ALL, '')
+csymb = locale.localeconv()["currency_symbol"]
+
 class Form(tk.LabelFrame):
-    currency_sym = locale.localeconv()["currency_symbol"]
     """Configures the login page widgets"""
     def __init__(self, master, form_fields, button_fields, *args, **kwargs):
         # Initialise the main frame
@@ -26,7 +28,7 @@ class Form(tk.LabelFrame):
             button.grid(row=len(self.widgets)+1, column=i, padx=1)
     
 class SalaryForm(Form):
-    form_fields = f'Annual Salary, {self.currency_sym}', 
+    form_fields = f'Annual Salary, {csymb}', 
     button_fields = []
 
     def __init__(self, master, *args, **kwargs):
@@ -70,7 +72,7 @@ class HomeForm(Form):
         self.buttons[2].bind('<Return>', callback)
 
 class ItemForm(Form):
-    form_fields = 'Category', 'Name', f'Price, {self.currency_sym}'
+    form_fields = 'Category', 'Name', f'Price, {csymb}'
     button_fields = {'text':'Update'}, {'text':'Delete'}, {'text':'Save as New'}
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Modify An Item or Create Your Own', **kwargs)

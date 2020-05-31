@@ -10,7 +10,7 @@ class LoginPage(tk.Frame):
     def __init__(self):
         super().__init__(root)
         root.title("Settings")
-        root.geometry('700x350')
+        root.geometry('800x350')
         self.list = ItemList(self)
         self.itemform = ItemForm(self)
         self.salaryform = SalaryForm(self)
@@ -87,7 +87,6 @@ class HomePage(tk.Frame):
     def update_count(self, count):
         self.form.active_buttons(count)
 
-    def display_congrats(self, item):
-        mb.showinfo(self, title = 'CONGRATULATIONS',
-                    message = f"Time to enjoy the following: {item.name}")
-        root.destroy()
+    def display_congrats(self, name):
+        mb.showinfo('CONGRATULATIONS', f"Time to enjoy the following: {name}")
+        
