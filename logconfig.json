@@ -1,0 +1,36 @@
+{
+    "version": 1,
+    "formatters": {
+        "standard": {
+            "format": "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s" 
+        }
+    },
+    "handlers": {
+        "debug": {
+            "filename": "debug.log",
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        },
+        "info": {
+            "filename": "info.log",
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        }
+    },
+    "loggers": {
+        "": {
+            "handlers": ["debug", "info"],
+            "level": "DEBUG"
+        },
+        "__main__": {
+            "propagate": true},
+        
+        "motivate.controllers.controller": {
+            "handlers": ["debug", "info"],
+            "level": "DEBUG",
+            "propagate": true}
+
+    }
+}

@@ -1,25 +1,44 @@
 import re
+#from logs import log_item
+import logging
+
+def log(callname):
+    def owrapper(func):
+        def iwrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except ValueError as e:
+                log = logging.getLogger(callname)
+                log.info(func.__name__)
+                log.info(str(e))
+                raise ValueError
+        return iwrapper
+    return owrapper
+
 
 def required(value, message):
-    #if not value:
-        #raise ValueError(message)
+    if not value:
+        raise ValueError(message)
     return value
 
+@log(__name__)
 def matches(value, regex, message):
-    #if value and not regex.match(value):
-        #raise ValueError(message)
+    if value and not regex.match(value):
+        raise ValueError(message)   
     return value
 
+
+#@log_item(__name__)
 class Item():
-    category_regex = re.compile(r"[a-z]")
+    category_regex = re.compile(r"^[a-zA-Z]")
     name_regex = re.compile(r"[^@]")
     price_regex = re.compile(r"[0-9]")
 
     def __init__(self, category='', name='', price=''):
-        self.category = category # should I be underscoring these
+        self.category = category 
         self.name = name
         self.price = price
-        
+   
     @property
     def category(self):
         return self._category
@@ -43,3 +62,10 @@ class Item():
     @price.setter
     def price(self, value):
         self._price = matches(value, self.price_regex, "Invalid price format")
+
+#@log_item(__name__)
+class DBItem():
+    def __init__(self, category='', name='', price=''):
+        self.category = category
+        self.name = name
+        self.price = price

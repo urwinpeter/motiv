@@ -2,13 +2,20 @@ import time
 from motivate.models.models import HomeCalculator
 from motivate.models.database import ItemsDB, QuotesDB
 from motivate.views.pages import LoginPage, HomePage
+#from logs import log_callbacks
+import logging
+print(__name__)
+log = logging.getLogger(__name__)
+
+print('Goodbye')
 
 class PageController():
     def __init__(self):
         self.login = LoginController(self)
         self.home = HomeController(self)
+        log.debug('Goodbye')
 
-    def start_login(self):
+    def start_app(self):
         self.login.view.start()
 
     def pass_control(self):
@@ -35,6 +42,7 @@ class LoginController():
         for c in self.items:
             self.view.add_item(c)
 
+    #@log_callbacks(__name__)
     def create_item(self): 
         new_item = self.view.get_details()
         self.calc.add_item(new_item)        # Add item to DB
@@ -46,6 +54,7 @@ class LoginController():
         item = self.items[index]
         self.view.load_details(item)
 
+    #@log_callbacks(__name__)
     def update_item(self):
         if not self.selection:
             return
@@ -58,6 +67,7 @@ class LoginController():
         self.items[self.selection] = updated_item # replace item with updated item in self.items list
         self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
 
+    #@log_callbacks(__name__)
     def delete_item(self):
         if not self.selection:
             return
@@ -82,10 +92,7 @@ class HomeController():
         self.count = False
         self.update(0) # could i mitigate this by setting it to 0 in view from get go?
         self.item = item
-             
-    ######
-    #CALLED FROM VIEW
-    ######
+    
     def Start(self, event=None):
         self._start_time = time.time()
         self._AddMoney(self._start_time)
@@ -104,9 +111,6 @@ class HomeController():
         self.calc.resetMoney()
         self.view.update_count(self.count)
 
-    ######
-    #CALLED FROM MODEL
-    ######
     def update(self, money):
         self.view.update_money(money)
         self.view.after(100, lambda : self._AddMoney(self._start_time) 

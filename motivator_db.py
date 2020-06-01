@@ -12,10 +12,10 @@ class UseDatabase():
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.conn.close()
 
-'''_sql = 'DROP TABLE items'
+_sql = 'DROP TABLE items'
 
 with UseDatabase() as conn:
-    conn.execute(_sql)'''
+    conn.execute(_sql)
 
 _sql = '''CREATE TABLE items
         (category varchar(255),
@@ -30,13 +30,19 @@ items = {'Shoes':(('Running Shoes',100),
                  ('Trainers', 45)),
         'Electronics': (('iPhone', 600),
                 ('Laptop', 1000),
-                ('HeadPhones', 30)),
+                ('Headphones', 30)),
         'Activities': (('Date Night', 70),
                 ('Cinema', 30),
                 ('Paintballing', 90)),
         'Holidays':(('Weekend Escape', 300),
                 ('Family Holiday', 2000),
-                ('Honeymoon', 5000))}
+                ('Honeymoon', 5000)),
+        'Food': (('Three Course Meal', 50),
+                ('Coffee and Cake', 10),
+                ('Takeaway', 25)),
+        'Accessories': (('Watch', 100),
+                ('Necklace',20),
+                ('Earrings',12))}
 
 _sql = 'INSERT INTO items VALUES (?,?,?)'
 with UseDatabase() as conn:

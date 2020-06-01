@@ -6,10 +6,11 @@ class ItemList(tk.LabelFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, text = 'Select An Item')
         self.lb = tk.Listbox(self, height=14, width =30, **kwargs)
-        scroll = tk.Scrollbar(self, command=self.lb.yview)
+        yscroll = tk.Scrollbar(self, command=self.lb.yview)
 
-        self.lb.config(yscrollcommand=scroll.set)
-        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.lb.config(yscrollcommand=yscroll.set)
+        
+        yscroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.lb.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
     def insert(self, item, index=tk.END):

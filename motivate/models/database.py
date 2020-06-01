@@ -1,5 +1,6 @@
 import sqlalchemy as sa
-from motivate.item import Item
+from motivate.item import DBItem
+#from logs import log_db
 
 class UseDatabase():
     """Context manager to manage connection with database"""
@@ -21,6 +22,7 @@ class ItemsDB():
     def _to_values(self, c):
         return c.category, c.name, c.price
 
+    #@log_db(__name__)
     def add_item(self, item):
         _sql = """INSERT INTO items VALUES
                 (?, ?, ?)"""
@@ -36,10 +38,11 @@ class ItemsDB():
                  FROM items"""
         with self.conn as conn:
             for row in conn.execute(_sql):
-                item = Item(*row[1:])
+                item = DBItem(*row[1:])
                 item.rowid = row[0]
                 yield item
 
+    #@log_db(__name__)
     def update_item(self, item):
         sql = """UPDATE items
                  SET category = ?, name = ?, price = ?
@@ -48,6 +51,7 @@ class ItemsDB():
             conn.execute(sql, self._to_values(item) + (item.rowid,))
         # return item
 
+    #@log_db(__name__)
     def delete_item(self, item):
         sql = "DELETE FROM items WHERE rowid = ?"
         with self.conn as conn:
@@ -63,6 +67,6 @@ class QuotesDB():  ###is this a bit overkill? should I just put a get_quote func
                 ORDER BY RANDOM()  
                 LIMIT 1''' 
         with self.conn as conn:
-            for row in conn.execute(_sql):
-                quote = row[0] 
+            row = conn.execute(_sql)
+            quote = row.fetchone()[0] 
         return quote
