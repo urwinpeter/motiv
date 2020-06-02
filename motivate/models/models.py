@@ -28,7 +28,7 @@ class Observable():
 
     @val.setter
     def val(self, value):
-        if value <= self._target: ## could turn this into decorator # make it so it takes into account the incremental increase every time interavaal
+        if value <= self._target:
             self._val = value
             self._notify_update(self._val)
         else:

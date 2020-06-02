@@ -1,13 +1,10 @@
-import tkinter as tk
 import locale
-from motivate.item import Item
+import tkinter as tk
 import tkinter.messagebox as mb
-#from motivate.logs import log_details
+from motivate.item import Item
 
 locale.setlocale(locale.LC_ALL, '')
 csymb = locale.localeconv()["currency_symbol"]
-
-
 
 class Form(tk.LabelFrame):
     """Configures the login page widgets"""
@@ -81,7 +78,6 @@ class ItemForm(Form):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, self.form_fields, self.button_fields, *args, text = 'Modify An Item or Create Your Own', **kwargs)
 
-    #@log_details(__name__)
     def get_details(self):
         details = [e.get() for e in self.entries]
         try:

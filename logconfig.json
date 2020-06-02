@@ -7,30 +7,54 @@
     },
     "handlers": {
         "debug": {
-            "filename": "debug.log",
+            "filename": "logdebug.log",
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "formatter": "standard"
         },
         "info": {
-            "filename": "info.log",
+            "filename": "loginfo.log",
             "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        },
+
+        "warning": {
+            "filename": "logwarning.log",
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        },
+
+        "database": {
+            "filename": "logdatabase.log",
+            "level": "DEBUG",
             "class": "logging.FileHandler",
             "formatter": "standard"
         }
     },
     "loggers": {
         "": {
-            "handlers": ["debug", "info"],
+            "handlers": ["debug", "info", "warning"],
             "level": "DEBUG"
         },
         "__main__": {
+            "level": "DEBUG",
             "propagate": true},
         
         "motivate.controllers.controller": {
-            "handlers": ["debug", "info"],
+            "level": "DEBUG",
+            "propagate": true},
+
+        "motivate.models.database": {
+            "handlers": ["database"],
+            "level": "DEBUG",
+            "propagate": true},
+        
+        "motivate.item": {
             "level": "DEBUG",
             "propagate": true}
+        
 
     }
 }

@@ -1,34 +1,20 @@
 import re
-#from logs import log_item
 import logging
+from motivate.logs import log_item
 
-def log(callname):
-    def owrapper(func):
-        def iwrapper(self, *args, **kwargs):
-            try:
-                return func(self, *args, **kwargs)
-            except ValueError as e:
-                log = logging.getLogger(callname)
-                log.info(func.__name__)
-                log.info(str(e))
-                raise ValueError
-        return iwrapper
-    return owrapper
-
+log = logging.getLogger(__name__)
 
 def required(value, message):
     if not value:
         raise ValueError(message)
     return value
 
-@log(__name__)
 def matches(value, regex, message):
     if value and not regex.match(value):
         raise ValueError(message)   
     return value
 
-
-#@log_item(__name__)
+@log_item(log, 'User Item Request:')
 class Item():
     category_regex = re.compile(r"^[a-zA-Z]")
     name_regex = re.compile(r"[^@]")
@@ -63,9 +49,10 @@ class Item():
     def price(self, value):
         self._price = matches(value, self.price_regex, "Invalid price format")
 
-#@log_item(__name__)
+@log_item(log, 'DB Item:')
 class DBItem():
-    def __init__(self, category='', name='', price=''):
+    def __init__(self, rowid = '', category='', name='', price=''):
+        self.rowid = rowid
         self.category = category
         self.name = name
         self.price = price

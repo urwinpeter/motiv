@@ -2,7 +2,6 @@ import tkinter as tk
 import locale
 
 class ItemList(tk.LabelFrame):
-    currency_sym = locale.localeconv()["currency_symbol"]
     def __init__(self, master, **kwargs):
         super().__init__(master, text = 'Select An Item')
         self.lb = tk.Listbox(self, height=14, width =30, **kwargs)

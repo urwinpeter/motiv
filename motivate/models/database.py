@@ -1,6 +1,9 @@
 import sqlalchemy as sa
+import logging
+from motivate.logs import log_db
 from motivate.item import DBItem
-#from logs import log_db
+
+log = logging.getLogger(__name__)
 
 class UseDatabase():
     """Context manager to manage connection with database"""
@@ -22,7 +25,7 @@ class ItemsDB():
     def _to_values(self, c):
         return c.category, c.name, c.price
 
-    #@log_db(__name__)
+    @log_db(log)
     def add_item(self, item):
         _sql = """INSERT INTO items VALUES
                 (?, ?, ?)"""
@@ -30,28 +33,25 @@ class ItemsDB():
             rowid = conn.execute(_sql,
                                 self._to_values(item)
                                 ).lastrowid
-            item.rowid = rowid
-        return item
+            item.rowid = rowid # the newly created item needs to be furnished with a rowid
         
     def get_items(self):
         _sql = """SELECT rowid, category, name, price
                  FROM items"""
         with self.conn as conn:
             for row in conn.execute(_sql):
-                item = DBItem(*row[1:])
-                item.rowid = row[0]
+                item = DBItem(*row)
                 yield item
 
-    #@log_db(__name__)
+    @log_db(log)
     def update_item(self, item):
         sql = """UPDATE items
                  SET category = ?, name = ?, price = ?
                  WHERE rowid = ?"""
         with self.conn as conn:
             conn.execute(sql, self._to_values(item) + (item.rowid,))
-        # return item
 
-    #@log_db(__name__)
+    @log_db(log)
     def delete_item(self, item):
         sql = "DELETE FROM items WHERE rowid = ?"
         with self.conn as conn:

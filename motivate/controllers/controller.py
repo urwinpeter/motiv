@@ -1,19 +1,16 @@
 import time
+import logging
+from motivate.logs import log_callbacks
 from motivate.models.models import HomeCalculator
 from motivate.models.database import ItemsDB, QuotesDB
 from motivate.views.pages import LoginPage, HomePage
-#from logs import log_callbacks
-import logging
-print(__name__)
-log = logging.getLogger(__name__)
 
-print('Goodbye')
+log = logging.getLogger(__name__)
 
 class PageController():
     def __init__(self):
         self.login = LoginController(self)
         self.home = HomeController(self)
-        log.debug('Goodbye')
 
     def start_app(self):
         self.login.view.start()
@@ -34,29 +31,31 @@ class LoginController():
         self.view = LoginPage()
         self.view.assign_callbacks(self)
         
-        self.items = list(self.calc.get_items())
+        self.items = []
         self.selection = None
         self._view_items()
 
     def _view_items(self): 
+        self.items = list(self.calc.get_items())
         for c in self.items:
             self.view.add_item(c)
 
-    #@log_callbacks(__name__)
+    @log_callbacks(log)
     def create_item(self): 
         new_item = self.view.get_details()
-        self.calc.add_item(new_item)        # Add item to DB
+        self.calc.add_item(new_item)        # Store item object in DB. The add_item function also furnished item object with appropriate rowid
         self.items.append(new_item)          
         self.view.add_item(new_item)        # Display item in listbox
-        
+
+    @log_callbacks(log)    
     def select_item(self, index):
         self.selection = index
         item = self.items[index]
         self.view.load_details(item)
 
-    #@log_callbacks(__name__)
+    @log_callbacks(log)
     def update_item(self):
-        if not self.selection:
+        if self.selection == None:
             return
         # Create new Item instance and give it same rowID  
         rowid = self.items[self.selection].rowid
@@ -67,9 +66,9 @@ class LoginController():
         self.items[self.selection] = updated_item # replace item with updated item in self.items list
         self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
 
-    #@log_callbacks(__name__)
+    @log_callbacks(log)
     def delete_item(self):
-        if not self.selection:
+        if self.selection == None:
             return
         item = self.items[self.selection]
         self.calc.delete_item(item)

@@ -88,5 +88,5 @@ class HomePage(tk.Frame):
         self.form.active_buttons(count)
 
     def display_congrats(self, name):
-        mb.showinfo('CONGRATULATIONS', f"Time to enjoy the following: {name}")
+        mb.showinfo('CONGRATULATIONS', f"Enjoy your {name}", parent = self)
         
