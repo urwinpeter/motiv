@@ -1,5 +1,5 @@
 # Mr Motivator
-Virtual Piggy Bank.
+A Virtual Piggy Bank.
 
 ## - useful commands
 
@@ -13,5 +13,7 @@ pip install -r requirements.txt
 ## - TODO
 
 ```
-
+Anticipate erroneous salary inputs
+Add xscroll to list widget
+Implement Pytests
 ```

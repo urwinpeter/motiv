@@ -24,7 +24,7 @@ class Form(tk.LabelFrame):
             entry.grid(row=i, column=1, padx=10, pady=5)
 
     def _create_buttons(self, fields):
-        self.buttons = [tk.Button(self, **f) for f in fields]
+        self.buttons = [tk.Button(self, activeforeground='blue', **f) for f in fields]
         for i, button in enumerate(self.buttons):
             button.grid(row=len(self.widgets)+1, column=i, padx=1)
     
@@ -87,7 +87,7 @@ class ItemForm(Form):
 
     def load_details(self, item):
         values = (item.category, item.name,
-                  item.price)
+                  locale.currency(item.price)[1:])
         for entry, value in zip(self.entries, values):
             entry.delete(0, tk.END)
             entry.insert(0, value)
