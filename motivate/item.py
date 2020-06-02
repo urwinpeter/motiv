@@ -1,24 +1,18 @@
 import re
 import logging
-from motivate.logs import log_item
+from motivate.logs import log_user_item
 
 log = logging.getLogger(__name__)
 
-def required(value, message):
-    if not value:
+def matches(value, message, regex):
+    if not regex.match(value):
         raise ValueError(message)
     return value
 
-def matches(value, regex, message):
-    if value and not regex.match(value):
-        raise ValueError(message)   
-    return value
-
-@log_item(log, 'User Item Request:')
+@log_user_item(log, 'User Item Request:')
 class Item():
-    category_regex = re.compile(r"^[a-zA-Z]")
-    name_regex = re.compile(r"[^@]")
-    price_regex = re.compile(r"[0-9]")
+    string_regex = re.compile(r"^\w+( +\w+)*$") # Accept alphanumeric characters with spaces and underscores
+    price_regex = re.compile(r"^\d+\.?\d{0,2}$") # Accept number in decimal form
 
     def __init__(self, category='', name='', price=''):
         self.category = category 
@@ -31,7 +25,7 @@ class Item():
 
     @category.setter
     def category(self, value):
-        self._category = matches(value, self.category_regex, "Invalid Category Format")
+        self._category = matches(value, "Invalid Category Format", self.string_regex)
 
     @property
     def name(self):
@@ -39,7 +33,7 @@ class Item():
 
     @name.setter
     def name(self, value):
-        self._name = matches(value, self.name_regex, "Invalid Name Format")
+        self._name = matches(value, "Invalid Name Format", self.string_regex)
 
     @property
     def price(self):
@@ -47,7 +41,7 @@ class Item():
 
     @price.setter
     def price(self, value):
-        self._price = matches(value, self.price_regex, "Invalid price format")
+        self._price = matches(value, "Invalid price format", self.price_regex)
 
 class DBItem():
     def __init__(self, rowid = '', category='', name='', price=''):

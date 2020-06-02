@@ -31,7 +31,7 @@ def log_get_items(logger):
         return iwrapper
     return owrapper
 
-def log_item(logger, title):
+def log_user_item(logger, title):
     def owrapper(class_):
         def iwrapper(*args, **kwargs):
             try: 

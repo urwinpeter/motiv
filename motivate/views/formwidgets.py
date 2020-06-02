@@ -40,7 +40,7 @@ class SalaryForm(Form):
 
     def get_details(self):
         return float(self.entries[0].get())
-    
+        
 class HomeForm(Form):
     form_fields = f'Earnings',
     button_fields = {'text':'Start'}, {'text':'Pause'},{'text':'Reset'}

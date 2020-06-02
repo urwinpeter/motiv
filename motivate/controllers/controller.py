@@ -17,9 +17,10 @@ class PageController():
 
     def pass_control(self):
         salary = self.login.view.get_salary()
-        item = self.login.view.get_details()
-        self.login.view.destroy()
-        self.home.load(salary, item)
+        item = self.login.view.get_item_details()
+        if item and salary:
+            self.login.view.destroy()
+            self.home.load(salary, item)
 
     def terminate(self):
         self.home.view.root.destroy() # is this sort of format ok?
@@ -42,10 +43,11 @@ class LoginController():
 
     @log_callbacks(log)
     def create_item(self): 
-        new_item = self.view.get_details()
-        self.calc.add_item(new_item)        # Store item object in DB. The add_item function also furnished item object with appropriate rowid
-        self.items.append(new_item)          
-        self.view.add_item(new_item)        # Display item in listbox
+        new_item = self.view.get_item_details()
+        if new_item:
+            self.calc.add_item(new_item)        # Store item object in DB. The add_item function also furnished item object with appropriate rowid
+            self.items.append(new_item)          
+            self.view.add_item(new_item)        # Display item in listbox
 
     @log_callbacks(log)    
     def select_item(self, index):
@@ -59,12 +61,13 @@ class LoginController():
             return
         # Create new Item instance and give it same rowID  
         rowid = self.items[self.selection].rowid
-        updated_item = self.view.get_details()
-        updated_item.rowid = rowid
-        # send updated item to db:
-        self.calc.update_item(updated_item)
-        self.items[self.selection] = updated_item # replace item with updated item in self.items list
-        self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
+        updated_item = self.view.get_item_details()
+        if updated_item:
+            updated_item.rowid = rowid
+            # send updated item to db:
+            self.calc.update_item(updated_item)
+            self.items[self.selection] = updated_item # replace item with updated item in self.items list
+            self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
 
     @log_callbacks(log)
     def delete_item(self):

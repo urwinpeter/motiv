@@ -49,7 +49,7 @@ class LoginPage(tk.Frame):
         self.itemform.clear_details()
         self.list.clear()
 
-    def get_details(self): # change to get_item_details?
+    def get_item_details(self):
         return self.itemform.get_details()
 
     def load_details(self, item):

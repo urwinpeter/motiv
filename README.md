@@ -13,6 +13,5 @@ pip install -r requirements.txt
 ## - TODO
 
 ```
-Registration Page
-Hash/salt passwords in DB
+
 ```
