@@ -19,6 +19,18 @@ def log_db(logger):
         return iwrapper
     return owrapper
 
+def log_get_items(logger):
+    def owrapper(func):
+        def iwrapper(self):
+            try:
+                for item in func(self):
+                    logger.debug(('DB Success:', func.__name__, item.__dict__))
+                    yield item     
+            except: 
+                logger.warning(('DB Failure:', func.__name__))
+        return iwrapper
+    return owrapper
+
 def log_item(logger, title):
     def owrapper(class_):
         def iwrapper(*args, **kwargs):

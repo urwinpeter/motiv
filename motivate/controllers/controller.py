@@ -37,8 +37,8 @@ class LoginController():
 
     def _view_items(self): 
         self.items = list(self.calc.get_items())
-        for c in self.items:
-            self.view.add_item(c)
+        for item in self.items:
+            self.view.add_item(item)
 
     @log_callbacks(log)
     def create_item(self): 

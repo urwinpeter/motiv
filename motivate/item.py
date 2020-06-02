@@ -49,7 +49,6 @@ class Item():
     def price(self, value):
         self._price = matches(value, self.price_regex, "Invalid price format")
 
-@log_item(log, 'DB Item:')
 class DBItem():
     def __init__(self, rowid = '', category='', name='', price=''):
         self.rowid = rowid

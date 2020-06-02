@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 import logging
-from motivate.logs import log_db
+from motivate.logs import log_db, log_get_items
 from motivate.item import DBItem
 
 log = logging.getLogger(__name__)
@@ -34,7 +34,8 @@ class ItemsDB():
                                 self._to_values(item)
                                 ).lastrowid
             item.rowid = rowid # the newly created item needs to be furnished with a rowid
-        
+
+    @log_get_items(log)    
     def get_items(self):
         _sql = """SELECT rowid, category, name, price
                  FROM items"""
