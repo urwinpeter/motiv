@@ -1,7 +1,7 @@
 import time
 import logging
 from motivate.logs import log_user_actions
-from motivate.models.models import HomeCalculator
+from motivate.models.models import EarningsCalculator
 from motivate.models.database import ItemsDB, QuotesDB
 from motivate.views.pages import LoginPage, HomePage
 
@@ -13,114 +13,112 @@ class PageController():
         self.home_control = HomePageController(self)
 
     def start_app(self):
-        self.login_control.view.start()
+        self.login_control.login_view.start()
 
-    def pass_control(self, event=None):
-        salary = self.login_control.view.get_salary()
-        item = self.login_control.view.get_item_details()
+    def load_homepage(self, event=None):
+        salary = self.login_control.login_view.get_salary()
+        item = self.login_control.login_view.get_item_details()
         if item and salary:
-            self.login_control.view.destroy()
-            self.home_control.load(salary, item)
+            self.login_control.login_view.destroy()
+            self.home_control.load_homepage(salary, item)
 
-    def terminate(self):
+    def terminate_app(self):
         self.home.view.root.destroy() # is this sort of format ok?
-  
+
+
 class LoginPageController():
-    def __init__(self, parent):
-        self.parent = parent
-        self.calc = ItemsDB()              
-        self.view = LoginPage()
-        self.view.assign_callbacks(self)
+    def __init__(self, master_controller):
+        self.master_control = master_controller
+        self.items_db = ItemsDB()              
+        self.login_view = LoginPage()
+        self.login_view.assign_callbacks(self, self.master_control) # or just master controller?
         
-        self.items = []
-        self.selection = None
+        #self.items = [] # do i need this?
+        self.items = list(self.items_db.get_items())
         self._view_items()
+        self.item_selection = None
 
     def _view_items(self): 
-        self.items = list(self.calc.get_items())
         for item in self.items:
-            self.view.add_item(item)
+            self.login_view.append_item(item)
 
     @log_user_actions(log)    
     def select_item(self, index):
-        self.selection = index
+        self.item_selection = index
         item = self.items[index]
-        self.view.load_details(item)        
+        self.login_view.display_item_details(item)        
 
     @log_user_actions(log)
     def create_item(self, event=None): 
-        new_item = self.view.get_item_details()
+        new_item = self.login_view.get_item_details()
         if new_item:
-            self.calc.add_item(new_item)        # Store item object in DB. The add_item function also furnished item object with appropriate rowid
+            self.items_db.add_item(new_item) # The add_item function also furnishes item object with appropriate rowid
             self.items.append(new_item)          
-            self.view.add_item(new_item)        # Display item in listbox
+            self.login_view.append_item(new_item)       
 
     @log_user_actions(log)
     def update_item(self, event=None):
-        if self.selection == None:
+        if self.item_selection == None:
             return
-        # Create new Item instance and give it same rowID  
-        rowid = self.items[self.selection].rowid
-        updated_item = self.view.get_item_details()
+        rowid = self.items[self.item_selection].rowid
+        updated_item = self.login_view.get_item_details()
         if updated_item:
             updated_item.rowid = rowid
-            # send updated item to db:
-            self.calc.update_item(updated_item)
-            self.items[self.selection] = updated_item # replace item with updated item in self.items list
-            self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
+            self.items_db.update_item(updated_item)
+            self.items[self.item_selection] = updated_item 
+            self.login_view.update_item(updated_item, self.item_selection) 
 
     @log_user_actions(log)
     def delete_item(self, event=None):
-        if self.selection == None:
+        if self.item_selection == None:
             return
-        item = self.items[self.selection]
-        self.calc.delete_item(item)
-        self.view.remove_items()
+        item = self.items[self.item_selection]
+        self.items_db.delete_item(item)
+        self.login_view.remove_items()
         self._view_items()
         
 class HomePageController():
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self, master_controller):
+        self.master_control = master_controller
 
-    def load(self, salary, item):
+    def load_homepage(self, salary, item):
         price = float(item.price)
         quote = QuotesDB().get_quote()
-        self.calc = HomeCalculator(salary, price)
-        self.calc.earnings.attach(self)
-        self.view = HomePage(quote, price)
-        self.view.assign_callbacks(self) # Assign controller to manage callbacks 
-        
-        # Set initial counting state and earnings value
-        self.count = False
-        self.update(0) # could i mitigate this by setting it to 0 in view from get go?
         self.item = item
-    
-    def Start(self, event=None):
-        self._start_time = time.time()
-        self._AddMoney(self._start_time)
+        self.calculator = EarningsCalculator(salary, price)
+        self.calculator.attach(self)
+        self.home_view = HomePage(quote, price)
+        self.home_view.assign_callbacks(self, self.master_control)
         
-    def _AddMoney(self, time):
-        self.count = True
-        self.calc.addMoney(time)
-        self.view.update_count(self.count)
+        self._counting_status = False
+        self.update_earnings(0)
+        
+    def start(self, event=None):
+        self._start_time = time.time()
+        self._add_money(self._start_time)
+        
+    def _add_money(self, time):
+        self._counting_status = True
+        self.calculator.add_money(time)
+        self.home_view.update_status(self._counting_status)
 
-    def PauseMoney(self, event=None):
-        self.count = False
-        self.view.update_count(self.count)
+    def pause_money(self, event=None):
+        self._counting_status = False
+        self.home_view.update_status(self._counting_status)
 
-    def ResetMoney(self, event=None):
-        self.count = None
-        self.calc.resetMoney()
-        self.view.update_count(self.count)
+    def reset_money(self, event=None):
+        self._counting_status = None
+        self.calculator.reset_money()
+        self.home_view.update_status(self._counting_status)
 
-    def update(self, money):
-        self.view.update_money(money)
-        self.view.after(100, lambda : self._AddMoney(self._start_time) 
-                            if self.count == True  else None) # or use observer.attach/detach in pausemoney/resetmoney etc
+    def update_earnings(self, money):
+        self.home_view.update_earnings(money)
+        self.home_view.after(100, lambda : self._add_money(self._start_time) 
+                            if self._counting_status == True  else None) # or use observer.attach/detach in pausemoney/resetmoney etc
     
     def mission_accomplished(self, money):
-        self.count = False
-        self.view.update_money(money)
-        self.view.update_count(False) 
-        self.view.display_congrats(self.item.name)
-        self.parent.terminate() 
+        self._counting_status = False
+        self.home_view.update_money(money)
+        self.home_view.update_status(False) 
+        self.home_view.display_congrats(self.item.name)
+        self.master_control.terminate_app() 

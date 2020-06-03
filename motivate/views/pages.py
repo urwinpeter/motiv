@@ -29,19 +29,19 @@ class LoginPage(tk.Frame):
         self.salaryform.pack(pady=10)
         self.next_button.pack(side=tk.BOTTOM, pady=5)
         
-    def assign_callbacks(self, control):
+    def assign_callbacks(self, control, mastercontrol):
         self.list.bind_double_click(control.select_item)
         self.itemform.bind_update(control.update_item)
         self.itemform.bind_delete(control.delete_item)
         self.itemform.bind_save(control.create_item)
-        self.bind_next(control.parent.pass_control)
+        self.bind_next(mastercontrol.load_homepage)
 
     def bind_next(self, callback):
         self.next_button.bind(callback)
         #self.next_button.config(command=callback)
         #self.next_button.bind('<Return>', callback)
 
-    def add_item(self, item):
+    def append_item(self, item):
         self.list.insert(item)
 
     def update_item(self, item, index):
@@ -54,8 +54,8 @@ class LoginPage(tk.Frame):
     def get_item_details(self):
         return self.itemform.get_details()
 
-    def load_details(self, item):
-        self.itemform.load_details(item)
+    def display_item_details(self, item):
+        self.itemform.display_item_details(item)
 
     def get_salary(self):
         return self.salaryform.get_details()
@@ -77,17 +77,17 @@ class HomePage(tk.Frame):
         self.form.pack()
         self.canvas.pack()
 
-    def assign_callbacks(self, control):
-        self.form.bind_start(control.Start)
-        self.form.bind_pause(control.PauseMoney)
-        self.form.bind_reset(control.ResetMoney)
+    def assign_callbacks(self, control, mastercontrol):
+        self.form.bind_start(control.start)
+        self.form.bind_pause(control.pause_money)
+        self.form.bind_reset(control.reset_money)
 
-    def update_money(self, money):
-        self.form.update_money(money)
+    def update_earnings(self, money):
+        self.form.update_earnings(money)
         self.canvas.update_chart(money)
         
-    def update_count(self, count):
-        self.form.active_buttons(count)
+    def update_status(self, count):
+        self.form.update_button_status(count)
 
     def display_congrats(self, name):
         mb.showinfo('CONGRATULATIONS', f"Enjoy your {name}", parent = self)

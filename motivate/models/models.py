@@ -16,7 +16,7 @@ class Observable():
     def _notify_update(self, value) -> None:
         print("notifying observers..")
         for observer in self._observers:
-                observer.update(value)
+                observer.update_earnings(value)
 
     def _notify_complete(self):
         for observer in self._observers:
@@ -34,17 +34,17 @@ class Observable():
         else:
             self._notify_complete()
         
-class HomeCalculator():
+class EarningsCalculator():
     def __init__(self, salary, target):
         self.earnings = Observable(0, target)
         self._rate = salary / (365 * 24 * 60 * 60)
          
-    def addMoney(self, start_time):
+    def add_money(self, start_time):
         earnings = self._rate * (time.time() - start_time)
         self.earnings.val  = self.earnings.val + earnings
         
-    def resetMoney(self):
+    def reset_money(self):
         self.earnings.val = 0
-
-    def set_user_vars(self, salary, price):
-        self.earnings = Obser
+    
+    def attach(self, observer):
+        self.earnings.attach(observer)

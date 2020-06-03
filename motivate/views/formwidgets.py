@@ -53,11 +53,11 @@ class HomeForm(Form):
         self.pause_button.grid(row=button_row, column=1, padx=1)
         self.reset_button.grid(row=button_row, column=2, padx=1)
 
-    def update_money(self, money):
+    def update_earnings(self, money):
         self.entries[0].delete(0,'end') #tk.END?
         self.entries[0].insert('end', str(locale.currency(money))) # Do i need the str?
 
-    def active_buttons(self, count): # Is this a fishy for loop too? should I pass it each button individually? via the assign callbacks?
+    def update_button_status(self, count): # Is this a fishy for loop too? should I pass it each button individually? via the assign callbacks?
         return
         combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),
                 False: (tk.ACTIVE, tk.DISABLED, tk.ACTIVE),
@@ -113,7 +113,7 @@ class ItemForm(Form):
         except ValueError as e:
             mb.showerror("Validation error", str(e), parent=self)
 
-    def load_details(self, item):
+    def display_item_details(self, item):
         values = (item.category, item.name,
                   locale.currency(float(item.price))[1:]) # change to string. remove
         for entry, value in zip(self.entries, values):
