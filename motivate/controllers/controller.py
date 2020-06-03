@@ -1,6 +1,6 @@
 import time
 import logging
-from motivate.logs import log_callbacks
+from motivate.logs import log_user_actions
 from motivate.models.models import HomeCalculator
 from motivate.models.database import ItemsDB, QuotesDB
 from motivate.views.pages import LoginPage, HomePage
@@ -9,23 +9,23 @@ log = logging.getLogger(__name__)
 
 class PageController():
     def __init__(self):
-        self.login = LoginController(self)
-        self.home = HomeController(self)
+        self.login_control = LoginPageController(self)
+        self.home_control = HomePageController(self)
 
     def start_app(self):
-        self.login.view.start()
+        self.login_control.view.start()
 
-    def pass_control(self):
-        salary = self.login.view.get_salary()
-        item = self.login.view.get_item_details()
+    def pass_control(self, event=None):
+        salary = self.login_control.view.get_salary()
+        item = self.login_control.view.get_item_details()
         if item and salary:
-            self.login.view.destroy()
-            self.home.load(salary, item)
+            self.login_control.view.destroy()
+            self.home_control.load(salary, item)
 
     def terminate(self):
         self.home.view.root.destroy() # is this sort of format ok?
   
-class LoginController():
+class LoginPageController():
     def __init__(self, parent):
         self.parent = parent
         self.calc = ItemsDB()              
@@ -41,22 +41,22 @@ class LoginController():
         for item in self.items:
             self.view.add_item(item)
 
-    @log_callbacks(log)
-    def create_item(self): 
+    @log_user_actions(log)    
+    def select_item(self, index):
+        self.selection = index
+        item = self.items[index]
+        self.view.load_details(item)        
+
+    @log_user_actions(log)
+    def create_item(self, event=None): 
         new_item = self.view.get_item_details()
         if new_item:
             self.calc.add_item(new_item)        # Store item object in DB. The add_item function also furnished item object with appropriate rowid
             self.items.append(new_item)          
             self.view.add_item(new_item)        # Display item in listbox
 
-    @log_callbacks(log)    
-    def select_item(self, index):
-        self.selection = index
-        item = self.items[index]
-        self.view.load_details(item)
-
-    @log_callbacks(log)
-    def update_item(self):
+    @log_user_actions(log)
+    def update_item(self, event=None):
         if self.selection == None:
             return
         # Create new Item instance and give it same rowID  
@@ -69,8 +69,8 @@ class LoginController():
             self.items[self.selection] = updated_item # replace item with updated item in self.items list
             self.view.update_item(updated_item, self.selection) # display the update item in listbox at appropriate index position
 
-    @log_callbacks(log)
-    def delete_item(self):
+    @log_user_actions(log)
+    def delete_item(self, event=None):
         if self.selection == None:
             return
         item = self.items[self.selection]
@@ -78,7 +78,7 @@ class LoginController():
         self.view.remove_items()
         self._view_items()
         
-class HomeController():
+class HomePageController():
     def __init__(self, parent):
         self.parent = parent
 

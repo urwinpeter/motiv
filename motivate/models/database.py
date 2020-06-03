@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 import logging
-from motivate.logs import log_db, log_get_items
+from motivate.logs import log_db_changes, log_db_items
 from motivate.item import DBItem
 
 log = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ class ItemsDB():
     def _to_values(self, c):
         return c.category, c.name, c.price
 
-    @log_db(log)
+    @log_db_changes(log)
     def add_item(self, item):
         _sql = """INSERT INTO items VALUES
                 (?, ?, ?)"""
@@ -35,16 +35,7 @@ class ItemsDB():
                                 ).lastrowid
             item.rowid = rowid # the newly created item needs to be furnished with a rowid
 
-    @log_get_items(log)    
-    def get_items(self):
-        _sql = """SELECT rowid, category, name, price
-                 FROM items"""
-        with self.conn as conn:
-            for row in conn.execute(_sql):
-                item = DBItem(*row)
-                yield item
-
-    @log_db(log)
+    @log_db_changes(log)
     def update_item(self, item):
         sql = """UPDATE items
                  SET category = ?, name = ?, price = ?
@@ -52,11 +43,20 @@ class ItemsDB():
         with self.conn as conn:
             conn.execute(sql, self._to_values(item) + (item.rowid,))
 
-    @log_db(log)
+    @log_db_changes(log)
     def delete_item(self, item):
         sql = "DELETE FROM items WHERE rowid = ?"
         with self.conn as conn:
             conn.execute(sql, (item.rowid,))
+
+    @log_db_items(log)    
+    def get_items(self):
+        _sql = """SELECT rowid, category, name, price
+                 FROM items"""
+        with self.conn as conn:
+            for row in conn.execute(_sql):
+                item = DBItem(*row)
+                yield item
 
 class QuotesDB():  ###is this a bit overkill? should I just put a get_quote functioninto Homecalculator and use with USedatabase as...
     config = 'sqlite:///motivate/models/quotes.db'

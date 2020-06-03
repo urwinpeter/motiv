@@ -1,6 +1,6 @@
 import logging
 
-def log_callbacks(logger):
+def log_user_actions(logger):
     def owrapper(func):
         def iwrapper(self, *args, **kwargs):
             logger.debug(('User Action:', func.__name__, *args))
@@ -8,7 +8,7 @@ def log_callbacks(logger):
         return iwrapper
     return owrapper
 
-def log_db(logger):
+def log_db_changes(logger):
     def owrapper(func):
         def iwrapper(self, item):
             try:
@@ -19,7 +19,7 @@ def log_db(logger):
         return iwrapper
     return owrapper
 
-def log_get_items(logger):
+def log_db_items(logger):
     def owrapper(func):
         def iwrapper(self):
             try:

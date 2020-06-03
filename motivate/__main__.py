@@ -2,6 +2,7 @@ import locale
 import logging.config
 import json
 from motivate.controllers.controller import PageController
+ 
 
 def main():
     with open('logconfig.json') as fh:

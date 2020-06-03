@@ -3,6 +3,7 @@ import tkinter.messagebox as mb
 from motivate.views.formwidgets import HomeForm, SalaryForm, ItemForm
 from motivate.views.listwidgets import ItemList
 from motivate.views.canvaswidgets import Pie
+from motivate.views.buttonwidgets import Button
 
 root = tk.Tk()
 
@@ -14,7 +15,7 @@ class LoginPage(tk.Frame):
         self.list = ItemList(self)
         self.itemform = ItemForm(self)
         self.salaryform = SalaryForm(self)
-        self.next_button = tk.Button(self, text='Next >')
+        self.next_button = Button(self, button_text='Next >')
         self._pack()
 
     def start(self):
@@ -36,8 +37,9 @@ class LoginPage(tk.Frame):
         self.bind_next(control.parent.pass_control)
 
     def bind_next(self, callback):
-        self.next_button.config(command=callback)
-        self.next_button.bind('<Return>', callback)
+        self.next_button.bind(callback)
+        #self.next_button.config(command=callback)
+        #self.next_button.bind('<Return>', callback)
 
     def add_item(self, item):
         self.list.insert(item)
