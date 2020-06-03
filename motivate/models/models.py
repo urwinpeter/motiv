@@ -3,7 +3,7 @@ import time
 class Observable():
     def __init__(self, value, target):
         self._observers = []
-        self._val = value
+        self._value = value
         self._target = target
 
     def attach(self, observer) -> None:
@@ -23,14 +23,14 @@ class Observable():
             observer.mission_accomplished(self._target)
         
     @property
-    def val(self):
-        return self._val
+    def value(self):
+        return self._value
 
-    @val.setter
-    def val(self, value):
+    @value.setter
+    def value(self, value):
         if value <= self._target:
-            self._val = value
-            self._notify_update(self._val)
+            self._value = value
+            self._notify_update(self._value)
         else:
             self._notify_complete()
         
@@ -41,10 +41,10 @@ class EarningsCalculator():
          
     def add_money(self, start_time):
         earnings = self._rate * (time.time() - start_time)
-        self.earnings.val  = self.earnings.val + earnings
+        self.earnings.value  = self.earnings.value + earnings
         
     def reset_money(self):
-        self.earnings.val = 0
+        self.earnings.value = 0
     
     def attach(self, observer):
         self.earnings.attach(observer)

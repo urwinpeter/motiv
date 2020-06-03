@@ -17,6 +17,7 @@ class UseDatabase():
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.conn.close()
 
+
 class ItemsDB():
     config = 'sqlite:///motivate/models/items.db'
     def __init__(self):
@@ -30,7 +31,8 @@ class ItemsDB():
         _sql = """INSERT INTO items VALUES
                 (?, ?, ?)"""
         with self.conn as conn:
-            rowid = conn.execute(_sql,
+            rowid = conn.execute(
+                                _sql,
                                 self._to_values(item)
                                 ).lastrowid
             item.rowid = rowid # the newly created item needs to be furnished with a rowid
@@ -41,13 +43,19 @@ class ItemsDB():
                  SET category = ?, name = ?, price = ?
                  WHERE rowid = ?"""
         with self.conn as conn:
-            conn.execute(sql, self._to_values(item) + (item.rowid,))
+            conn.execute(
+                        sql, 
+                        self._to_values(item) + (item.rowid,)
+                        )
 
     @log_db_changes(log)
     def delete_item(self, item):
         sql = "DELETE FROM items WHERE rowid = ?"
         with self.conn as conn:
-            conn.execute(sql, (item.rowid,))
+            conn.execute(
+                        sql,
+                        (item.rowid,)
+                        )
 
     @log_db_items(log)    
     def get_items(self):
@@ -57,6 +65,7 @@ class ItemsDB():
             for row in conn.execute(_sql):
                 item = DBItem(*row)
                 yield item
+                
 
 class QuotesDB():  ###is this a bit overkill? should I just put a get_quote functioninto Homecalculator and use with USedatabase as...
     config = 'sqlite:///motivate/models/quotes.db'
