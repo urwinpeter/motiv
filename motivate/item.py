@@ -4,10 +4,12 @@ from motivate.logs import log_user_item
 
 log = logging.getLogger(__name__)
 
+
 def matches(value, message, regex):
     if not regex.match(value):
         raise ValueError(message)
     return value
+
 
 @log_user_item(log, 'User Item Request:')
 class Item():
@@ -42,6 +44,7 @@ class Item():
     @price.setter
     def price(self, value):
         self._price = matches(value, "Invalid price format", self.price_regex)
+
 
 class DBItem():
     def __init__(self, rowid = '', category='', name='', price=''):

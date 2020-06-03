@@ -8,29 +8,30 @@ from motivate.views.pages import LoginPage, HomePage
 log = logging.getLogger(__name__)
 
 class PageController():
-    def __init__(self):
-        self.login_control = LoginPageController(self)
-        self.home_control = HomePageController(self)
+    def __init__(self, root_widget):
+        self.root_widget = root_widget
+        self.login_control = LoginPageController(self, root_widget)
+        self.home_control = HomePageController(self, root_widget)
 
     def start_app(self):
-        self.login_control.login_view.start()
+        self.root_widget.mainloop()
 
     def load_homepage(self, event=None):
-        salary = self.login_control.login_view.get_salary()
-        item = self.login_control.login_view.get_item_details()
+        salary = self.login_control.login_view.get_salary() # this seems like a cheat
+        item = self.login_control.login_view.get_item_details() # as does this
         if item and salary:
             self.login_control.login_view.destroy()
             self.home_control.load_homepage(salary, item)
 
     def terminate_app(self):
-        self.home_control.home_view.root.destroy() # is this sort of format ok?
+        self.root_widget.destroy() # is this sort of format ok?
 
 
 class LoginPageController():
-    def __init__(self, master_controller):
+    def __init__(self, master_controller, root_widget):
         self.master_control = master_controller
         self.items_db = ItemsDB()              
-        self.login_view = LoginPage()
+        self.login_view = LoginPage(root_widget)
         self.login_view.assign_callbacks(
                                         control=self, 
                                         mastercontrol=self.master_control # or just master controller?
@@ -84,8 +85,9 @@ class LoginPageController():
 
     
 class HomePageController():
-    def __init__(self, master_controller):
+    def __init__(self, master_controller, master_widget):
         self.master_control = master_controller
+        self.master_widget = master_widget
 
     def load_homepage(self, salary, item):
         price = float(item.price)
@@ -93,7 +95,7 @@ class HomePageController():
         self.item = item
         self.calculator = EarningsCalculator(salary, price)
         self.calculator.attach(observer=self)
-        self.home_view = HomePage(quote, price)
+        self.home_view = HomePage(quote, price, self.master_widget)
         self.home_view.assign_callbacks(
                                         control=self, 
                                         mastercontrol=self.master_control

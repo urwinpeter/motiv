@@ -3,7 +3,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class PieChart(tk.Frame):
-    explode = (0.1, 0)
+    explode = (0.1, 0)  
     colours = ['#0066CC','#DDDDDD']
     def __init__(self, master, item_price):
         super().__init__(master)
@@ -24,10 +24,7 @@ class PieChart(tk.Frame):
     def update_chart(self, money):
         ratio = money/self.item_price
         self.ax.clear()
-        if ratio <=1:
-            self.wedge_sizes = [ratio, 1-(ratio)]
-        else: 
-            self.wedge_sizes = [1, 0]
+        self.wedge_sizes = [ratio, 1-(ratio)]
         self.ax.pie(
                 self.wedge_sizes, 
                 explode=self.explode, 
@@ -37,4 +34,3 @@ class PieChart(tk.Frame):
                 startangle=90
                 )
         self.fig.canvas.draw()
-

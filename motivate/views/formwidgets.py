@@ -138,6 +138,7 @@ class ItemForm(Form):
     def bind_save(self, callback):
         self.save_button.bind(callback)
 
+
 class SalaryForm(Form):
     form_fields = f'Annual Salary, {csymb}',
 

@@ -8,6 +8,7 @@ def log_user_actions(logger):
         return iwrapper
     return owrapper
 
+
 def log_db_changes(logger):
     def owrapper(func):
         def iwrapper(self, item):
@@ -18,6 +19,7 @@ def log_db_changes(logger):
                 logger.warning(('DB Failure:', func.__name__, item.__dict__))
         return iwrapper
     return owrapper
+
 
 def log_db_items(logger):
     def owrapper(func):
@@ -31,6 +33,7 @@ def log_db_items(logger):
         return iwrapper
     return owrapper
 
+
 def log_user_item(logger, title):
     def owrapper(class_):
         def iwrapper(*args, **kwargs):
@@ -42,22 +45,4 @@ def log_user_item(logger, title):
                 raise
         return iwrapper
     return owrapper
-
-'''def log_details(callname):
-    def owrapper(func):
-        def iwrapper(self, *args, **kwargs):
-            log = logging.getLogger(callname)
-            details = [e.get() for e in self.entries]
-            try:
-                item = Item(*details)
-                details.append('success')
-                log.info(details) 
-                return item 
-            except ValueError as e:
-                details.append('failure')
-                mb.showerror("Validation error", str(e), parent=self)
-                log.info(details)
-        return iwrapper
-    return owrapper'''
-
         

@@ -33,6 +33,7 @@ class Observable():
             self._notify_update(self._value)
         else:
             self._notify_complete()
+       
         
 class EarningsCalculator():
     def __init__(self, salary, target):

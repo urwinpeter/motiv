@@ -5,10 +5,8 @@ from motivate.views.listwidgets import ItemList
 from motivate.views.canvaswidgets import PieChart
 from motivate.views.buttonwidgets import Button
 
-root = tk.Tk()
-
 class LoginPage(tk.Frame):
-    def __init__(self):
+    def __init__(self, root):
         super().__init__(root)
         root.title("Settings")
         root.geometry('800x350')
@@ -18,8 +16,8 @@ class LoginPage(tk.Frame):
         self.next_button = Button(self, button_text='Next >')
         self._pack()
 
-    def start(self):
-        root.mainloop() # This seems a bit hidden away here for an important function
+    '''def start(self):
+        root.mainloop() # This seems a bit hidden away here for an important function'''
     
     def _pack(self):
         self.pack() # Pack Login Page Inside Tk 
@@ -60,10 +58,9 @@ class LoginPage(tk.Frame):
 
 
 class HomePage(tk.Frame):
-    def __init__(self, quote, price):
+    def __init__(self, quote, price, root):
         super().__init__(root)
         root.title("Progress")
-        self.root = root
         self.earnings_form = EarningsForm(
                             item_price=price, 
                             master_widget=self
