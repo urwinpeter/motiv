@@ -58,6 +58,7 @@ class LoginPage(tk.Frame):
     def get_salary(self):
         return self.salary_form.get_salary()
 
+
 class HomePage(tk.Frame):
     def __init__(self, quote, price):
         super().__init__(root)

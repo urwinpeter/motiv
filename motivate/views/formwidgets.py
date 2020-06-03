@@ -24,8 +24,9 @@ class Form(tk.LabelFrame):
 
 class EarningsForm(Form):
     form_fields = 'Earnings',
-    def __init__(self, item_price, master_widget, *args, **kwargs):
-        super().__init__(self.form_fields, master_widget, *args, **kwargs)
+
+    def __init__(self, item_price, master_widget):
+        super().__init__(self.form_fields, master_widget)
         self.item_price = item_price
         self._create_text()
         self._create_buttons()
@@ -83,8 +84,13 @@ class EarningsForm(Form):
 
 class ItemForm(Form):
     form_fields = 'Category', 'Name', f'Price, {csymb}'
-    def __init__(self, master, *args, **kwargs):
-        super().__init__(self.form_fields, master, *args, text = 'Modify An Item or Create Your Own', **kwargs)
+
+    def __init__(self, master):
+        super().__init__(
+                        self.form_fields, 
+                        master, 
+                        text = 'Modify An Item or Create Your Own'
+                        )
         self._create_buttons()
     
     def _create_buttons(self):
@@ -133,10 +139,14 @@ class ItemForm(Form):
         self.save_button.bind(callback)
 
 class SalaryForm(Form):
-    form_fields = f'Annual Salary, {csymb}', 
+    form_fields = f'Annual Salary, {csymb}',
 
-    def __init__(self, master, *args, **kwargs):
-        super().__init__(self.form_fields, master, *args, text = 'Set Your Salary', **kwargs)
+    def __init__(self, master):
+        super().__init__(
+                        self.form_fields, 
+                        master,
+                        text = 'Set Your Salary'
+                        )
         
     def get_salary(self):
         return float(self.entries[0].get())
