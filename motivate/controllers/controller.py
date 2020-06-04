@@ -1,22 +1,40 @@
 import time
 import logging
 from motivate.logs import log_user_actions
-from motivate.models.models import EarningsCalculator
+from motivate.models.calculator import EarningsCalculator
 from motivate.models.database import ItemsDB, QuotesDB
 from motivate.views.pages import LoginPage, HomePage
 
-log = logging.getLogger(__name__)
+_log= logging.getLogger(__name__)
 
 class PageController():
+    """
+    The master controller. Used to start/stop the app and designate control 
+    to secondary controllers.
+
+    ...
+
+    Attributes
+    ----------
+    root_widget : tkinter.TK
+        The main window on which Pages are placed
+    login_control : LoginController object
+        Controls all events unique to the LoginPage
+    home_control : HomeController object
+        Controls all events unique to the HomePage
+    """
+
     def __init__(self, root_widget):
         self.root_widget = root_widget
         self.login_control = LoginPageController(self, root_widget)
         self.home_control = HomePageController(self, root_widget)
 
     def start_app(self):
+        """Sets mainloop in motion"""
         self.root_widget.mainloop()
 
     def load_homepage(self, event=None):
+        """Destroys LoginPage and loads HomePage""" 
         salary = self.login_control.login_view.get_salary() # this seems like a cheat
         item = self.login_control.login_view.get_item_details() # as does this
         if item and salary:
@@ -24,6 +42,7 @@ class PageController():
             self.home_control.load_homepage(salary, item)
 
     def terminate_app(self):
+        """Terminates App"""
         self.root_widget.destroy() # is this sort of format ok?
 
 
@@ -45,13 +64,13 @@ class LoginPageController():
         for item in self.items:
             self.login_view.append_item(item)
 
-    @log_user_actions(log)    
+    @log_user_actions(_log)    
     def select_item(self, index):
         self.item_selection = index
         item = self.items[index]
         self.login_view.display_item_details(item)        
 
-    @log_user_actions(log)
+    @log_user_actions(_log)
     def create_item(self, event=None): 
         new_item = self.login_view.get_item_details()
         if new_item:
@@ -59,7 +78,7 @@ class LoginPageController():
             self.items.append(item=new_item)          
             self.login_view.append_item(item=new_item)       
 
-    @log_user_actions(log)
+    @log_user_actions(_log)
     def update_item(self, event=None):
         if self.item_selection == None:
             return
@@ -74,7 +93,7 @@ class LoginPageController():
                                         index=self.item_selection
                                         ) 
 
-    @log_user_actions(log)
+    @log_user_actions(_log)
     def delete_item(self, event=None):
         if self.item_selection == None:
             return

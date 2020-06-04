@@ -9,6 +9,7 @@ class ItemList(tk.LabelFrame):
         self.listbox.config(yscrollcommand=yscroll.set)
         yscroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+        # TODO: Add xscroll
 
     def insert_item(self, item, index=tk.END):
         text = f'{item.category}, {item.name}, {locale.currency(float(item.price))}'

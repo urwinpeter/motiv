@@ -3,7 +3,7 @@ import logging
 from motivate.logs import log_db_changes, log_db_items
 from motivate.item import DBItem
 
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 class UseDatabase():
     """Context manager to manage connection with database"""
@@ -26,7 +26,7 @@ class ItemsDB():
     def _to_values(self, c):
         return c.category, c.name, c.price
 
-    @log_db_changes(log)
+    @log_db_changes(_log)
     def add_item(self, item):
         _sql = """INSERT INTO items VALUES
                 (?, ?, ?)"""
@@ -37,7 +37,7 @@ class ItemsDB():
                                 ).lastrowid
             item.rowid = rowid # the newly created item needs to be furnished with a rowid
 
-    @log_db_changes(log)
+    @log_db_changes(_log)
     def update_item(self, item):
         sql = """UPDATE items
                  SET category = ?, name = ?, price = ?
@@ -48,7 +48,7 @@ class ItemsDB():
                         self._to_values(item) + (item.rowid,)
                         )
 
-    @log_db_changes(log)
+    @log_db_changes(_log)
     def delete_item(self, item):
         sql = "DELETE FROM items WHERE rowid = ?"
         with self.conn as conn:
@@ -57,7 +57,7 @@ class ItemsDB():
                         (item.rowid,)
                         )
 
-    @log_db_items(log)    
+    @log_db_items(_log)    
     def get_items(self):
         _sql = """SELECT rowid, category, name, price
                  FROM items"""

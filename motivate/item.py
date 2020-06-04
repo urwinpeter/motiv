@@ -2,7 +2,7 @@ import re
 import logging
 from motivate.logs import log_user_item
 
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 def matches(value, message, regex):
@@ -11,7 +11,7 @@ def matches(value, message, regex):
     return value
 
 
-@log_user_item(log, 'User Item Request:')
+@log_user_item(_log, 'User Item Request:')
 class Item():
     string_regex = re.compile(r"^\w+( +\w+)*$") # Accept alphanumeric characters with spaces and underscores
     price_regex = re.compile(r"^\d+\.?\d{0,2}$") # Accept number in decimal form

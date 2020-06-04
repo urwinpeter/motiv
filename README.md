@@ -6,7 +6,7 @@ A Virtual Piggy Bank.
 ```
 virtualenv -p python3 venv
 source venv/bin/activate 
-python -m motivate (from within motiv folder and assuming python3)
+python -m motivate
 pip install -r requirements.txt
 ```
 
@@ -15,5 +15,6 @@ pip install -r requirements.txt
 ```
 Anticipate erroneous salary inputs
 Add xscroll to list widget
-Implement Pytests
+Implement Logging of HomePage events
+Implement Pytests for Homepage events
 ```

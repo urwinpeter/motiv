@@ -2,9 +2,7 @@ import tkinter as tk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-class PieChart(tk.Frame):
-    explode = (0.1, 0)  
-    colours = ['#0066CC','#DDDDDD']
+class PieChart(tk.Frame):  
     def __init__(self, master, item_price):
         super().__init__(master)
         self.item_price = item_price
@@ -26,9 +24,8 @@ class PieChart(tk.Frame):
         self.ax.clear()
         self.wedge_sizes = [ratio, 1-(ratio)]
         self.ax.pie(
-                self.wedge_sizes, 
-                explode=self.explode, 
-                colors = self.colours, 
+                self.wedge_sizes,  
+                colors = ['#0066CC','#DDDDDD'], 
                 autopct=None,
                 shadow=False, 
                 startangle=90

@@ -150,5 +150,6 @@ class SalaryForm(Form):
                         )
         
     def get_salary(self):
+        # TODO: Check user entry is of appropriate form
         return float(self.entries[0].get())
         
