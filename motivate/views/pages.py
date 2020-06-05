@@ -26,6 +26,8 @@ class LoginPage(tk.Frame):
         self.item_form.pack(padx=10, pady=10)
         self.salary_form.pack(pady=10)
         self.next_button.pack(side=tk.BOTTOM, pady=5)
+        self.item=None
+        self.salary=None
         
     def assign_callbacks(self, control, mastercontrol):
         self.item_listbox.bind_double_click(control.select_item)
@@ -48,13 +50,20 @@ class LoginPage(tk.Frame):
         self.item_listbox.clear_items()
 
     def get_item_details(self):
-        return self.item_form.get_item_details()
+        self.item = self.item_form.get_item_details()
+        return self.item
 
     def display_item_details(self, item):
         self.item_form.display_item_details(item)
 
     def get_salary(self):
-        return self.salary_form.get_salary()
+        self.salary = self.salary_form.get_salary()
+        return self.salary
+
+    def show(self):
+        self.grab_set()
+        self.wait_window()
+        return self.item, self.salary
 
 
 class HomePage(tk.Frame):

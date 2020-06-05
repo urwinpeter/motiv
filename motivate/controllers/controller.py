@@ -7,10 +7,22 @@ from motivate.views.pages import LoginPage, HomePage
 
 _log= logging.getLogger(__name__)
 
+class AppController(root_widget):
+    self.login_view = LoginPage(root_widget)
+    self.login_view.assign_callbacks(LoginPageController(self, self.login_view))
+    self.page_control = PageController(root_widget)
+    #self.login_control = LoginPageController(self, self.login_view)
+
+    def start_app():
+        item, salary = self.login_view.show()
+        if item, salary:
+            
+            
+    
 class PageController():
     """
-    The master controller. Used to start/stop the app and designate control 
-    to secondary controllers.
+    The master controller. Used to start/stop the app and communication between
+    secondary controllers
 
     ...
 
@@ -26,35 +38,37 @@ class PageController():
 
     def __init__(self, root_widget):
         self.root_widget = root_widget
-        self.login_control = LoginPageController(self, root_widget)
-        self.home_control = HomePageController(self, root_widget)
+        self.login_view = LoginPage(root_widget)
+        self.home_view = HomeView(root_widget)
+        self.login_control = LoginPageController(self, self.login_view)
+        self.home_control = HomePageController(self, self.home_view)
+
+    def assign(self):
+        self.login_view.assign_callbacks(self.login_control)
+        self.home_view.assign_callbacks(self.home_control)
 
     def start_app(self):
         """Sets mainloop in motion"""
+        self.login_view.tkraise()
         self.root_widget.mainloop()
 
-    def load_homepage(self, event=None):
+    def load_homepage(self, item, salary):
         """Destroys LoginPage and loads HomePage""" 
-        salary = self.login_control.login_view.get_salary() # this seems like a cheat
-        item = self.login_control.login_view.get_item_details() # as does this
-        if item and salary:
-            self.login_control.login_view.destroy()
-            self.home_control.load_homepage(salary, item)
+        
+        self.home_control.update(item, salary)
+        self.home_view.tkraise()
 
     def terminate_app(self):
         """Terminates App"""
-        self.root_widget.destroy() # is this sort of format ok?
+        self.root_widget.destroy()
 
 
 class LoginPageController():
-    def __init__(self, master_controller, root_widget):
+    def __init__(self, master_controller, view):
         self.master_control = master_controller
         self.items_db = ItemsDB()              
-        self.login_view = LoginPage(root_widget)
-        self.login_view.assign_callbacks(
-                                        control=self, 
-                                        mastercontrol=self.master_control # or just master controller?
-                                        ) 
+        self.login_view = view
+        
         #self.items = [] # do i need this?
         self.items = list(self.items_db.get_items())
         self._view_items()
@@ -102,24 +116,27 @@ class LoginPageController():
         self.login_view.remove_items()
         self._view_items()
 
+    def pass_control(self, event=None):
+        item = self.loging_view.get_item_details()
+        salary= self.login_view.get_salary()
+        if item and salary:
+            self.master_controller.load_homepage(item, salary)
     
 class HomePageController():
     def __init__(self, master_controller, master_widget):
         self.master_control = master_controller
         self.master_widget = master_widget
+        self._counting_status = False
 
-    def load_homepage(self, salary, item):
+    
+    def update(self, item, salary):
         price = float(item.price)
         quote = QuotesDB().get_quote()
         self.item = item
         self.calculator = EarningsCalculator(salary, price)
         self.calculator.attach(observer=self)
-        self.home_view = HomePage(quote, price, self.master_widget)
-        self.home_view.assign_callbacks(
-                                        control=self, 
-                                        mastercontrol=self.master_control
-                                        )
-        self._counting_status = False
+        self.home_view.update(quote, price)
+        
         self.update_earnings(0)
         
     def start(self, event=None):
@@ -154,3 +171,5 @@ class HomePageController():
         self.home_view.update_status(False) 
         self.home_view.display_congrats(self.item.name)
         self.master_control.terminate_app() 
+
+    
