@@ -2,7 +2,7 @@ import locale
 import json
 import logging.config
 import tkinter as tk
-from motivate.controllers.controller import PageController
+from motivate.controllers.controller import PageController, LoginPageController, HomePageController
 
 def main():
     with open('logconfig.json') as log_config:
@@ -11,8 +11,14 @@ def main():
     log.info('PROGRAMME START')
 
     root = tk.Tk()
-    PageController(root).start_app()
 
+    ui = UIViewer(root)
+    login_controller=LoginController(root, ui)
+    home_controller=HomeController(root, ui)
+
+    LifeCycle(
+        login_controller, home_controller
+    ).start_app()
 
 if __name__ == "__main__":
     main()

@@ -3,50 +3,10 @@ import logging
 from motivate.logs import log_user_actions
 from motivate.models.calculator import EarningsCalculator
 from motivate.models.database import ItemsDB, QuotesDB
-from motivate.views.pages import LoginPage, HomePage
 
 _log= logging.getLogger(__name__)
 
-class PageController():
-    """
-    The master controller. Used to start/stop the app and designate control 
-    to secondary controllers.
-
-    ...
-
-    Attributes
-    ----------
-    root_widget : tkinter.TK
-        The main window on which Pages are placed
-    login_control : LoginController object
-        Controls all events unique to the LoginPage
-    home_control : HomeController object
-        Controls all events unique to the HomePage
-    """
-
-    def __init__(self, root_widget):
-        self.root_widget = root_widget
-        self.login_control = LoginPageController(self, root_widget)
-        self.home_control = HomePageController(self, root_widget)
-
-    def start_app(self):
-        """Sets mainloop in motion"""
-        self.root_widget.mainloop()
-
-    def load_homepage(self, event=None):
-        """Destroys LoginPage and loads HomePage""" 
-        salary = self.login_control.login_view.get_salary() # this seems like a cheat
-        item = self.login_control.login_view.get_item_details() # as does this
-        if item and salary:
-            self.login_control.login_view.destroy()
-            self.home_control.load_homepage(salary, item)
-
-    def terminate_app(self):
-        """Terminates App"""
-        self.root_widget.destroy() # is this sort of format ok?
-
-
-class LoginPageController():
+class LoginController():
     def __init__(self, master_controller, root_widget):
         self.master_control = master_controller
         self.items_db = ItemsDB()              
@@ -104,9 +64,9 @@ class LoginPageController():
 
     
 class HomePageController():
-    def __init__(self, master_controller, master_widget):
-        self.master_control = master_controller
-        self.master_widget = master_widget
+    def __init__(self, master_widget):
+        self.master_widget = master_widget)
+        ViewManager.bind_next(load_homepage)
 
     def load_homepage(self, salary, item):
         price = float(item.price)
@@ -116,8 +76,7 @@ class HomePageController():
         self.calculator.attach(observer=self)
         self.home_view = HomePage(quote, price, self.master_widget)
         self.home_view.assign_callbacks(
-                                        control=self, 
-                                        mastercontrol=self.master_control
+                                        control=self
                                         )
         self._counting_status = False
         self.update_earnings(0)
@@ -128,12 +87,15 @@ class HomePageController():
         
     def _add_money(self, time):
         self._counting_status = True
-        self.calculator.add_money(time)
-        self.home_view.update_status(self._counting_status)
+        (amount, complete) = self.calculator.add_money(time)
+        if complete:
+            self.home_view.update_earnings(amount)
+            view.exit(self.item.name)
+        else:
+            self.home_view.update_status(self._counting_status)
 
     def pause_money(self, event=None):
         self._counting_status = False
-        self.home_view.update_status(self._counting_status)
 
     def reset_money(self, event=None):
         self._counting_status = None
@@ -147,10 +109,3 @@ class HomePageController():
                             if self._counting_status == True  
                             else None
                             ) # or use observer.attach/detach in pausemoney/resetmoney etc
-    
-    def mission_accomplished(self, money):
-        self._counting_status = False
-        self.home_view.update_earnings(money)
-        self.home_view.update_status(False) 
-        self.home_view.display_congrats(self.item.name)
-        self.master_control.terminate_app() 
