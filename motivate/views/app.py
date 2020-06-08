@@ -29,7 +29,7 @@ class ViewLifecycle():
         self._login = login_controller
 
     def start_app(self):
-        TkView() \
+        TkViewManager() \
             .on('login-update', lambda item: self._login.update(item)) \
             .on('login-delete', lambda item: self._login.delete(item)) \
             .on('login-save', lambda item: self._login.save(item)) \
@@ -37,9 +37,10 @@ class ViewLifecycle():
             .on('home-start', lambda: self._home.start()) \
             .on('home-pause', lambda: self._home.pause_money()) \
             .on('home-reset', lambda: self._home.reset_money()) \
+            .schedule(after=100, lambda)
             .start()
             
-    class TkView():
+    class TkViewManager():
     
         def __init__(self):
             self._root = tk.Tk()
@@ -83,6 +84,4 @@ class ViewLifecycle():
                         message=f"Enjoy your {name}",
                         parent = self
                         )
-
-        
-        
+     
