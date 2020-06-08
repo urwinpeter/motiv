@@ -28,21 +28,14 @@ class EarningsForm(Form):
     def __init__(self, item_price, master_widget):
         super().__init__(self.form_fields, master_widget)
         self.item_price = item_price
-        self._create_text()
-        self._create_buttons()
-
-    def _create_text(self):
-        self.item_price_text = tk.Message(
-                            master=self, 
-                            text = f'/{locale.currency(self.item_price)}',
-                            width = 100
-                            )
-        self.item_price_text.grid(
+        tk.Message(
+                master=self, 
+                text = f'/{locale.currency(self.item_price)}',
+                width = 100
+                ).grid(
                     row=len(self.form_widgets)-1,
                     column = 2
                     )
-    
-    def _create_buttons(self):
         button_row = len(self.form_widgets) + 1
         self.start_button = Button(
                                 master_widget=self, 
@@ -64,23 +57,29 @@ class EarningsForm(Form):
         self.entries[0].delete(0, 'end') #tk.END?
         self.entries[0].insert('end', str(locale.currency(money))) 
 
-    def update_button_status(self, count): # Is this a fishy for loop too? should I pass it each button individually? via the assign callbacks?
-        return
-        combos = {True: (tk.DISABLED, tk.ACTIVE, tk.DISABLED),
-                False: (tk.ACTIVE, tk.DISABLED, tk.ACTIVE),
-                None: (tk.ACTIVE, tk.DISABLED, tk.DISABLED)}
-        for i, button in enumerate(self.buttons):
-            button.config(state=combos[count][i])
-
     def bind_start(self, callback):
-        self.start_button.bind(callback)
+        def _callback(event=None):
+            self.start_button.config(state=tk.DISABLED)
+            self.pause_button.config(state=tk.ACTIVE)
+            self.reset_button.config(state=tk.DISABLED)
+            callback()
+        self.start_button.bind(_callback)
        
     def bind_pause(self, callback):
-        self.pause_button.bind(callback)
+        def _callback(event=None):
+            self.start_button.config(state=tk.ACTIVE)
+            self.pause_button.config(state=tk.DISABLED)
+            self.reset_button.config(state=tk.ACTIVE)
+            callback()
+        self.pause_button.bind(_callback)
        
     def bind_reset(self, callback):
-        self.reset_button.bind(callback)
-
+        def _callback(event=None):
+            self.start_button.config(state=tk.ACTIVE)
+            self.pause_button.config(state=tk.DISABLED)
+            self.reset_button.config(state=tk.DISABLED)
+            callback()
+        self.reset_button.bind(_callback)
 
 class ItemForm(Form):
     form_fields = 'Category', 'Name', f'Price, {csymb}'
@@ -130,13 +129,23 @@ class ItemForm(Form):
             entry.delete(0, tk.END)
 
     def bind_update(self, callback):
-        self.update_button.bind(callback)
+        def _callback(event=None):
+            item = self.get_item_details()
+            if item:
+                callback(item)
+        self.update_button.bind(_callback)
+
 
     def bind_delete(self, callback):
         self.delete_button.bind(callback)
 
     def bind_save(self, callback):
-        self.save_button.bind(callback)
+        def _callback():
+            item = self.get_item_details()
+            if item:
+                callback(item)
+        self.save_button.bind(_callback)
+  
 
 
 class SalaryForm(Form):

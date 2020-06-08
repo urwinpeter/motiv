@@ -22,8 +22,8 @@ class ItemList(tk.LabelFrame):
         self.listbox.delete(0, tk.END)
 
     def update_item(self, item, index):
-        self.delete(index)
-        self.insert(item, index)
+        self.delete_item(index)
+        self.insert_item(item, index)
 
     def bind_double_click(self, callback):
         self.listbox.bind(

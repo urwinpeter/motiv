@@ -10,6 +10,7 @@ class PieChart(tk.Frame):
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
         self._pack()
         self.ax = self.fig.add_subplot()
+        self.update_chart(0)
 
     def _pack(self):
         self.pack()

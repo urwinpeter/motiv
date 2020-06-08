@@ -43,6 +43,7 @@ class EarningsCalculator():
     def add_money(self, start_time):
         earnings = self._rate * (time.time() - start_time)
         self.earnings.value  = self.earnings.value + earnings
+        return self.earnings.value
         
     def reset_money(self):
         self.earnings.value = 0
