@@ -20,6 +20,7 @@ class UseDatabase():
 
 class ItemsDB():
     config = 'sqlite:///motivate/models/items.db'
+
     def __init__(self):
         self.conn = UseDatabase(self.config)
 
@@ -67,8 +68,9 @@ class ItemsDB():
                 yield item
                 
 
-class QuotesDB():  ###is this a bit overkill? should I just put a get_quote functioninto Homecalculator and use with USedatabase as...
+class QuotesDB(): # Is this a bit overkill? Also doesn't really belong in Model?
     config = 'sqlite:///motivate/models/quotes.db'
+
     def __init__(self):
         self.conn = UseDatabase(self.config)
 

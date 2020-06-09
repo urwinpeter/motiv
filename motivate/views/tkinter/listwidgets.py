@@ -26,6 +26,7 @@ class ItemList(tk.LabelFrame):
         self.insert_item(item, index)
 
     def bind_double_click(self, callback):
+        callback(0) # here or something equivalent in ItemService?
         self.listbox.bind(
                         "<Double-Button-1>",
                         lambda _: callback(self.listbox.curselection()[0])

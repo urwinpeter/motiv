@@ -1,9 +1,11 @@
-import locale
 import json
 import logging.config
-import tkinter as tk
-from motivate.controllers.controller import LoginController, HomeController
-from motivate.views.pages import ViewLifecycle
+from motivate.service.money import MoneyService
+from motivate.service.items import ItemService
+from motivate.controllers.money_control import  MoneyController
+from motivate.controllers.item_control import  ItemController
+from motivate.views.app import ViewLifecycle
+
 
 def main():
     with open('logconfig.json') as log_config:
@@ -11,14 +13,11 @@ def main():
     log = logging.getLogger(__name__)
     log.info('PROGRAMME START')
     
-    login_controller=LoginController()
-    home_controller=HomeController()
-
+    item_controller=ItemController(ItemService())
+    money_controller=MoneyController(MoneyService())
     ViewLifecycle(
-        login_controller, home_controller
-    ).start_app()
-
-
+                item_controller, money_controller
+                ).start_app()
 
 if __name__ == "__main__":
     main()
