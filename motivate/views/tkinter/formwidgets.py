@@ -1,29 +1,20 @@
-import locale
 import tkinter as tk
 import tkinter.messagebox as mb
+import motivate.currency as currency
 from motivate.item import Item
 from motivate.views.tkinter.buttonwidgets import Button
 
-locale.setlocale(locale.LC_ALL, '')
-csymb = locale.localeconv()["currency_symbol"]
-
-
 class ItemForm(tk.LabelFrame):
-    form_fields = 'Category', 'Name', f'Price, {csymb}'
+    form_fields = 'Category', 'Name', currency.append_currency_symbol('Price')
 
     def __init__(self, master):
         super().__init__(
-                        master, 
-                        text = 'Modify An Item or Create Your Own'
-                        )
-        # Create Labels and Entries                
+            master=master, 
+            text='Modify An Item or Create Your Own'
+            )
+        # Create Widgets             
         labels = [tk.Label(self, text=f) for f in self.form_fields]
         self.entries = [tk.Entry(self) for _ in self.form_fields]
-        self.form_widgets = list(zip(labels, self.entries))
-        for i, (label, entry) in enumerate(self.form_widgets): 
-            label.grid(row=i, column=0, padx=10, sticky=tk.W)
-            entry.grid(row=i, column=1, padx=10, pady=5)
-        # Create Buttons
         self.update_button = Button(
             master_widget=self, 
             button_text='Update'
@@ -36,11 +27,21 @@ class ItemForm(tk.LabelFrame):
             master_widget=self, 
             button_text='Save as New'
             )
-        # Grid Buttons    
-        button_row = len(self.form_widgets) + 1
-        self.update_button.grid(row=button_row, column=0, padx=1)
-        self.delete_button.grid(row=button_row, column=1, padx=1)
-        self.save_button.grid(row=button_row, column=2, padx=1)
+        # Grid Widgets  
+        self.form_widgets = list(zip(labels, self.entries))
+        for i, (label, entry) in enumerate(self.form_widgets): 
+            label.grid(row=i, column=0, padx=10, sticky=tk.W)
+            entry.grid(row=i, column=1, padx=10, pady=5) 
+        for i, button in enumerate(
+                [self.update_button, 
+                self.delete_button, 
+                self.save_button]
+                ):
+            button.grid(
+                row=len(self.form_widgets) + 1,
+                column=i,
+                padx=1
+                )
 
     def get_item_details(self):
         details = [entry.get() for entry in self.entries]
@@ -51,12 +52,12 @@ class ItemForm(tk.LabelFrame):
 
     def display_item_details(self, item):
         values = (item.category, item.name,
-                  locale.currency(float(item.price))[1:]) # change to string. remove
+                  currency.number_formatter(float(item.price)))
         for entry, value in zip(self.entries, values):
             entry.delete(0, tk.END) # or call clear_entries?
             entry.insert(0, value)
   
-    def clear_entries(self):
+    def remove_item_details(self):
         for entry in self.entries:
             entry.delete(0, tk.END)
 
@@ -79,40 +80,41 @@ class ItemForm(tk.LabelFrame):
   
     
 class EarningsForm(tk.LabelFrame):
-   
+
     def __init__(self, item_price, master_widget):
         super().__init__(master_widget)
-        form_row=0
-        label = tk.Label(self, text='Earnings').grid(row=form_row, column=0, padx=10, sticky=tk.W)
-        self.earnings_entry = tk.Entry(self)
-        self.earnings_entry.grid(row=form_row, column=1, padx=10, pady=5)
-        tk.Message(
-                master=self, 
-                text = f'/{locale.currency(item_price)}',
-                width = 100
-                ).grid(
-            row=form_row,
-            column = 2
+        # Create Widgets
+        label = tk.Label(master=self, text='Earnings')
+        message = tk.Message(
+            master=self, 
+            text=f'/{currency.currency_formatter(item_price)}',
+            width=100
             )
+        self.earnings_entry = tk.Entry(self)
         self.start_button = Button(
-                                master_widget=self, 
-                                button_text='Start'
-                                )
+            master_widget=self, 
+            button_text='Start'
+            )
         self.pause_button = Button(
-                                master_widget=self, 
-                                button_text='Pause'
-                                )
+            master_widget=self, 
+            button_text='Pause'
+            )
         self.reset_button = Button(
-                                master_widget=self, 
-                                button_text='Reset'
-                                )
-        self.start_button.grid(row=form_row+1, column=0, padx=1)
-        self.pause_button.grid(row=form_row+1, column=1, padx=1)
-        self.reset_button.grid(row=form_row+1, column=2, padx=1)
-
+            master_widget=self, 
+            button_text='Reset'
+            )
+        # Grid Widgets                                     
+        for i, widget in enumerate([label, self.earnings_entry, message]):
+            widget.grid(row=0, column=i, padx=10, pady =5)
+        for i, button in enumerate([self.start_button, 
+                                    self.pause_button, 
+                                    self.reset_button]
+                                    ):
+            button.grid(row=1, column=i, padx=1)
+        
     def update_earnings(self, money):
         self.earnings_entry.delete(0, 'end') #tk.END?
-        self.earnings_entry.insert('end', str(locale.currency(money))) 
+        self.earnings_entry.insert('end', currency.currency_formatter(money))
 
     def bind_start(self, callback):
         def _callback(event=None):
@@ -139,17 +141,20 @@ class EarningsForm(tk.LabelFrame):
         self.reset_button.bind(_callback)
 
 class SalaryForm(tk.LabelFrame):
-
+    
     def __init__(self, master_widget):
         super().__init__(
-                        master_widget,
-                        text = 'Set Your Salary'
-                        )
-        row = 0                
-        tk.Label(self, text=f'Annual Salary, {csymb}').grid(row=row, column=0, padx=10, sticky=tk.W)
-        self.salary_entry = tk.Entry(self)
-        self.salary_entry.grid(row=row, column=1, padx=10, pady=5)
-    
+            master=master_widget,
+            text='Set Your Salary'
+            )            
+        label = tk.Label(
+            master=self, 
+            text=currency.append_currency_symbol('Annual Salary')
+            )
+        self.salary_entry = tk.Entry(master=self)
+        for i, widget in enumerate([label, self.salary_entry]):
+            widget.grid(row=0, column=i, padx=10)
+        
     def get_salary(self):
         # TODO: Check user entry is of appropriate form
         return float(self.salary_entry.get())

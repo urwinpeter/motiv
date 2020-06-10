@@ -1,6 +1,9 @@
+# Standard library imports
 import tkinter as tk
-from motivate.views.tkinter.pages import LoginPage, HomePage
+
+# Local application imports
 from motivate.models.database import QuotesDB
+from motivate.views.tkinter.pages import LoginPage, HomePage
 
 
 class ViewLifecycle():
@@ -53,7 +56,6 @@ class TkViewManager():
             self._active_context = LoginPage(self._root, self._commands)
 
         def _render_home(self, price):
-            quote = QuotesDB().get_quote() # Here or in Homepage?
             self._root.title("Progress")
             self._active_context = HomePage(self._root, price, quote, self._commands)
 

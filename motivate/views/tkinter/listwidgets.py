@@ -1,5 +1,5 @@
 import tkinter as tk
-import locale
+import motivate.currency as currency
 
 class ItemList(tk.LabelFrame):
     def __init__(self, master, **kwargs):
@@ -12,7 +12,7 @@ class ItemList(tk.LabelFrame):
         # TODO: Add xscroll
 
     def insert_item(self, item, index=tk.END):
-        text = f'{item.category}, {item.name}, {locale.currency(float(item.price))}'
+        text = f'{item.category}, {item.name}, {currency.currency_formatter(float(item.price))}'
         self.listbox.insert(index, text)
 
     def delete_item(self, index):
@@ -28,6 +28,6 @@ class ItemList(tk.LabelFrame):
     def bind_double_click(self, callback):
         callback(0) # here or something equivalent in ItemService?
         self.listbox.bind(
-                        "<Double-Button-1>",
-                        lambda _: callback(self.listbox.curselection()[0])
-                        )
+            "<Double-Button-1>",
+            lambda _: callback(self.listbox.curselection()[0])
+            )

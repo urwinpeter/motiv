@@ -42,7 +42,7 @@ class LoginPage(tk.Frame):
         self._load_items(items, selected_item)
 
     def _remove_items(self):
-        self.item_form.clear_entries()
+        self.item_form.remove_item_details()
         self.item_listbox.clear_items()
     
     def _load_items(self, items, selected_item):

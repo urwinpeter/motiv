@@ -1,5 +1,8 @@
+# Standard library imports
 import time
 import logging
+
+# Local applications imports
 from motivate.logs import log_user_actions
 
 

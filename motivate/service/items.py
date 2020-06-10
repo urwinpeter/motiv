@@ -1,5 +1,9 @@
-from motivate.models.database import ItemsDB
+# Third party imports
 from pubsub import pub
+
+# Local application imports
+from motivate.models.database import ItemsDB
+
 
 class ItemService():
     def __init__(self):
@@ -25,7 +29,7 @@ class ItemService():
         self.items_db.update_item(updated_item)
         self._notify()
         
-    def delete_item(self, item):
+    def delete_item(self):
         if self.item_selection == None:
             return
         self.items_db.delete_item(self.items[self.item_selection])

@@ -1,4 +1,5 @@
 import re
+import motivate.currency as currency
 import logging
 from motivate.logs import log_user_item
 
@@ -9,7 +10,6 @@ def matches(value, message, regex):
     if not regex.match(value):
         raise ValueError(message)
     return value
-
 
 @log_user_item(_log, 'User Item Request:')
 class Item():
@@ -27,7 +27,9 @@ class Item():
 
     @category.setter
     def category(self, value):
-        self._category = matches(value, "Invalid Category Format", self.string_regex)
+        self._category = matches(
+            value, "Invalid Category Format", self.string_regex
+            )
 
     @property
     def name(self):
@@ -43,7 +45,10 @@ class Item():
 
     @price.setter
     def price(self, value):
-        self._price = matches(value, "Invalid price format", self.price_regex)
+        raw_value = currency.strip_currency_formatting(value)
+        self._price = matches(
+            raw_value, "Invalid price format", self.price_regex
+            )
 
 
 class DBItem():

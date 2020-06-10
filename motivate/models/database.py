@@ -1,5 +1,10 @@
-import sqlalchemy as sa
+# Standard library imports
 import logging
+
+# Third party imports
+import sqlalchemy as sa
+
+# Local application imports
 from motivate.logs import log_db_changes, log_db_items
 from motivate.item import DBItem
 

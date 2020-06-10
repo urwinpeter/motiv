@@ -1,6 +1,11 @@
-import time
+# Standard library imports
 import threading
+import time
+
+# Third party imports
 from pubsub import pub
+
+# Local application imports
 from motivate.models.calculator import EarningsCalculator
 
 class MoneyService():
