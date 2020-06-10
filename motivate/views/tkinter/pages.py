@@ -52,24 +52,25 @@ class LoginPage(tk.Frame):
 
 
 class HomePage(tk.Frame):
-    def __init__(self, root, price, quote, commands):
+    def __init__(self, root, price, commands):
         super().__init__(root)
         # Subscribe to Updates
         pub.subscribe(self.update_earnings, "money_changed")
+        pub.subscribe(self.load_quote_text, "quote_ready")
         # Create and Pack Widgets
         self.earnings_form = EarningsForm(
-                            item_price=price, 
-                            master_widget=self
-                            )
-        tk.Message(
-                master=self, 
-                text = quote, 
-                width=300, 
-                justify =tk.CENTER, 
-                font = ("Helvetica", 16, "bold italic")
-                ).pack()
+            item_price=price, 
+            master_widget=self
+            )
+        self.quote = tk.Message(
+            master=self,  
+            width=300, 
+            justify =tk.CENTER, 
+            font = ("Helvetica", 16, "bold italic")
+            )
         self.piechart = PieChart(self, price)
         self.pack()
+        self.quote.pack()
         self.earnings_form.pack()
         self.piechart.pack()
         # Bind Callbacks
@@ -80,3 +81,7 @@ class HomePage(tk.Frame):
     def update_earnings(self, money):  
         self.earnings_form.update_earnings(money)
         self.piechart.update_chart(money)
+
+    def load_quote_text(self, quote):
+        self.quote.config(text=quote)
+        

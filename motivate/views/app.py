@@ -57,7 +57,7 @@ class TkViewManager():
 
         def _render_home(self, price):
             self._root.title("Progress")
-            self._active_context = HomePage(self._root, price, quote, self._commands)
+            self._active_context = HomePage(self._root, price, self._commands)
 
         def _notify(self, name):
             mb.showinfo(
