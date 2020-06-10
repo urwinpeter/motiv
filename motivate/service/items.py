@@ -1,6 +1,5 @@
 # Third party imports
 from pubsub import pub
-
 # Local application imports
 from motivate.models.database import ItemsDB
 
@@ -33,8 +32,13 @@ class ItemService():
         if self.item_selection == None:
             return
         self.items_db.delete_item(self.items[self.item_selection])
-        del self.items[self.item_selection] 
+        del self.items[self.item_selection]
+        self.item_selection = 0 
         self._notify()
 
     def _notify(self):
-        pub.sendMessage("item_changed", items=self.items, selected_item=self.items[self.item_selection])
+        pub.sendMessage(
+            "item_changed", 
+            items=self.items, 
+            selected_item=self.items[self.item_selection]
+            )

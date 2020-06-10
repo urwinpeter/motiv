@@ -1,10 +1,11 @@
 # Standard library imports
-import time
 import logging
+import time
 # Local applications imports
 from motivate.logs import log_user_actions
 
 _log= logging.getLogger(__name__)
+
 
 class ItemController():
     def __init__(self, item_service):

@@ -1,14 +1,13 @@
 # Standard library imports
 import logging
-
 # Third party imports
 import sqlalchemy as sa
-
 # Local application imports
-from motivate.logs import log_db_changes, log_db_items
 from motivate.item import DBItem
+from motivate.logs import log_db_changes, log_db_items
 
 _log = logging.getLogger(__name__)
+
 
 class UseDatabase():
     """Context manager to manage connection with database"""
@@ -38,9 +37,9 @@ class ItemsDB():
                 (?, ?, ?)"""
         with self.conn as conn:
             rowid = conn.execute(
-                                _sql,
-                                self._to_values(item)
-                                ).lastrowid
+                _sql,
+                self._to_values(item)
+                ).lastrowid
             item.rowid = rowid # the newly created item needs to be furnished with a rowid
 
     @log_db_changes(_log)
@@ -50,18 +49,18 @@ class ItemsDB():
                  WHERE rowid = ?"""
         with self.conn as conn:
             conn.execute(
-                        sql, 
-                        self._to_values(item) + (item.rowid,)
-                        )
+                sql, 
+                self._to_values(item) + (item.rowid,)
+                )
 
     @log_db_changes(_log)
     def delete_item(self, item):
         sql = "DELETE FROM items WHERE rowid = ?"
         with self.conn as conn:
             conn.execute(
-                        sql,
-                        (item.rowid,)
-                        )
+                sql,
+                (item.rowid,)
+                )
 
     @log_db_items(_log)    
     def get_items(self):
@@ -73,7 +72,7 @@ class ItemsDB():
                 yield item
                 
 
-class QuotesDB(): # Is this a bit overkill? Also doesn't really belong in Model?
+class QuotesDB():
     config = 'sqlite:///motivate/models/quotes.db'
 
     def __init__(self):

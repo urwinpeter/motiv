@@ -1,6 +1,5 @@
 # Standard library imports
 import tkinter as tk
-
 # Local application imports
 from motivate.models.database import QuotesDB
 from motivate.views.tkinter.pages import LoginPage, HomePage

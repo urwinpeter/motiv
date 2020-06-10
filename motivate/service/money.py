@@ -1,19 +1,18 @@
 # Standard library imports
 import threading
 import time
-
 # Third party imports
 from pubsub import pub
-
 # Local application imports
 from motivate.models.calculator import EarningsCalculator
+
 
 class MoneyService():
     def __init__(self):
         self.calculator = EarningsCalculator()
         self._counting_status = True
-        self._earnings = 0
         self._target = 0
+        self._earnings = 0
         self._start_time = 0
     
     def start(self):
@@ -38,9 +37,9 @@ class MoneyService():
     def set_user_values(self, salary, price):
         self._target = price
         self.calculator.set_user_rate(
-                                    salary 
-                                    / (365 * 24 * 60 * 60)
-                                    )
+            salary / (365 * 24 * 60 * 60)
+            )
+
     @property
     def earnings(self):
         return self._earnings
@@ -49,6 +48,7 @@ class MoneyService():
     def earnings(self, value):
         if value <= self._target:
             self._earnings = value
+    
             pub.sendMessage("money_changed", money=value)
         else:
             self._earnings = self._target

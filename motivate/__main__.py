@@ -2,7 +2,6 @@
 import json
 import locale
 import logging.config
-
 # Local application imports
 from motivate.controllers.item_control import  ItemController
 from motivate.controllers.money_control import  MoneyController
@@ -20,7 +19,6 @@ def main():
     
     item_controller=ItemController(ItemService())
     money_controller=MoneyController(MoneyService(), QuoteService())
-    
     ViewLifecycle(
                 item_controller, money_controller, 
                 ).start_app()

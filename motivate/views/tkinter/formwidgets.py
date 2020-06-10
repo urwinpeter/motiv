@@ -1,8 +1,11 @@
+# Standard library imports
 import tkinter as tk
 import tkinter.messagebox as mb
+# Local application imports
 import motivate.currency as currency
 from motivate.item import Item
 from motivate.views.tkinter.buttonwidgets import Button
+
 
 class ItemForm(tk.LabelFrame):
     form_fields = 'Category', 'Name', currency.append_currency_symbol('Price')
@@ -12,7 +15,7 @@ class ItemForm(tk.LabelFrame):
             master=master, 
             text='Modify An Item or Create Your Own'
             )
-        # Create Widgets             
+        # Create widgets             
         labels = [tk.Label(self, text=f) for f in self.form_fields]
         self.entries = [tk.Entry(self) for _ in self.form_fields]
         self.update_button = Button(
@@ -27,7 +30,7 @@ class ItemForm(tk.LabelFrame):
             master_widget=self, 
             button_text='Save as New'
             )
-        # Grid Widgets  
+        # Grid widgets  
         self.form_widgets = list(zip(labels, self.entries))
         for i, (label, entry) in enumerate(self.form_widgets): 
             label.grid(row=i, column=0, padx=10, sticky=tk.W)
@@ -83,7 +86,7 @@ class EarningsForm(tk.LabelFrame):
 
     def __init__(self, item_price, master_widget):
         super().__init__(master_widget)
-        # Create Widgets
+        # Create widgets
         label = tk.Label(master=self, text='Earnings')
         message = tk.Message(
             master=self, 
@@ -103,7 +106,7 @@ class EarningsForm(tk.LabelFrame):
             master_widget=self, 
             button_text='Reset'
             )
-        # Grid Widgets                                     
+        # Grid widgets                                     
         for i, widget in enumerate([label, self.earnings_entry, message]):
             widget.grid(row=0, column=i, padx=10, pady =5)
         for i, button in enumerate([self.start_button, 

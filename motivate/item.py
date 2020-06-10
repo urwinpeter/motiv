@@ -1,6 +1,8 @@
-import re
-import motivate.currency as currency
+# Standard library imports
 import logging
+import re
+# Local application imports
+import motivate.currency as currency
 from motivate.logs import log_user_item
 
 _log = logging.getLogger(__name__)
@@ -52,7 +54,7 @@ class Item():
 
 
 class DBItem():
-    def __init__(self, rowid = '', category='', name='', price=''):
+    def __init__(self, rowid, category, name, price):
         self.rowid = rowid
         self.category = category
         self.name = name

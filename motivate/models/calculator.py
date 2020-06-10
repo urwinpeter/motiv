@@ -1,6 +1,7 @@
 # Standard library imports
 import time
 
+
 class EarningsCalculator():
     def __init__(self):
         self._rate = 0

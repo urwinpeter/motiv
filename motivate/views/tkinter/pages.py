@@ -1,27 +1,31 @@
+# Standard library imports
 import tkinter as tk
+# Third party imports
+from pubsub import pub
+# Local application imports
+from motivate.views.tkinter.buttonwidgets import Button
+from motivate.views.tkinter.canvaswidgets import PieChart
 from motivate.views.tkinter.formwidgets import EarningsForm, SalaryForm, ItemForm
 from motivate.views.tkinter.listwidgets import ItemList
-from motivate.views.tkinter.canvaswidgets import PieChart
-from motivate.views.tkinter.buttonwidgets import Button
-from pubsub import pub
+
 
 class LoginPage(tk.Frame):
     def __init__(self, root, commands):
         super().__init__(root)
-        # Subscribe to Updates
+        # Subscribe to updates
         pub.subscribe(self.update_items, "item_changed")
-        # Create Widgets
+        # Create widgets
         self.item_listbox = ItemList(self)
         self.item_form = ItemForm(self)
         self.salary_form = SalaryForm(self)
         self.next_button = Button(self, button_text='Next >')
-        # Pack Widgets
+        # Pack widgets
         self.pack() 
         self.item_listbox.pack(side=tk.LEFT, padx=10, pady=10)
         self.item_form.pack(padx=10, pady=10)
         self.salary_form.pack(pady=10)
         self.next_button.pack(side=tk.BOTTOM, pady=5)
-        # Bind Callbacks
+        # Bind callbacks
         self.item_listbox.bind_double_click(commands['login-select'])
         self.item_form.bind_update(commands['login-update'])
         self.item_form.bind_delete(commands['login-delete'])
@@ -54,10 +58,10 @@ class LoginPage(tk.Frame):
 class HomePage(tk.Frame):
     def __init__(self, root, price, commands):
         super().__init__(root)
-        # Subscribe to Updates
+        # Subscribe to updates
         pub.subscribe(self.update_earnings, "money_changed")
         pub.subscribe(self.load_quote_text, "quote_ready")
-        # Create and Pack Widgets
+        # Create and pack widgets
         self.earnings_form = EarningsForm(
             item_price=price, 
             master_widget=self
@@ -73,10 +77,12 @@ class HomePage(tk.Frame):
         self.quote.pack()
         self.earnings_form.pack()
         self.piechart.pack()
-        # Bind Callbacks
+        # Bind callbacks
         self.earnings_form.bind_start(commands['home-start'])
         self.earnings_form.bind_pause(commands['home-pause'])
         self.earnings_form.bind_reset(commands['home-reset'])
+        # Set initial earnings
+        self.update_earnings(0) #? should money_service be doing this?
 
     def update_earnings(self, money):  
         self.earnings_form.update_earnings(money)

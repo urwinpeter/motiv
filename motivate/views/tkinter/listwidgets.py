@@ -1,10 +1,12 @@
+# Standard library imports
 import tkinter as tk
+# Local application imports
 import motivate.currency as currency
 
 class ItemList(tk.LabelFrame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master):
         super().__init__(master, text = 'Select An Item')
-        self.listbox = tk.Listbox(self, height=14, width =30, **kwargs)
+        self.listbox = tk.Listbox(self, height=14, width =30)
         yscroll = tk.Scrollbar(self, command=self.listbox.yview)
         self.listbox.config(yscrollcommand=yscroll.set)
         yscroll.pack(side=tk.RIGHT, fill=tk.Y)
@@ -26,7 +28,7 @@ class ItemList(tk.LabelFrame):
         self.insert_item(item, index)
 
     def bind_double_click(self, callback):
-        callback(0) # here or something equivalent in ItemService?
+        callback(0) # This is a crucial line to programme - find alternative
         self.listbox.bind(
             "<Double-Button-1>",
             lambda _: callback(self.listbox.curselection()[0])

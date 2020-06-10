@@ -1,6 +1,9 @@
+# Standard library imports
 import tkinter as tk 
+# Third party imports
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 
 class PieChart(tk.Frame):  
     def __init__(self, master, item_price):
@@ -10,25 +13,24 @@ class PieChart(tk.Frame):
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
         self._pack()
         self.ax = self.fig.add_subplot()
-        self.update_chart(0)
 
     def _pack(self):
         self.pack()
         self.canvas._tkcanvas.pack(
-                                side=tk.TOP, 
-                                fill=tk.BOTH, 
-                                expand=1
-                                )
+            side=tk.TOP, 
+            fill=tk.BOTH, 
+            expand=1
+            )
     
     def update_chart(self, money):
         ratio = money/self.item_price
         self.ax.clear()
         self.wedge_sizes = [ratio, 1-(ratio)]
         self.ax.pie(
-                self.wedge_sizes,  
-                colors = ['#0066CC','#DDDDDD'], 
-                autopct=None,
-                shadow=False, 
-                startangle=90
-                )
+            self.wedge_sizes,  
+            colors = ['#0066CC','#DDDDDD'], 
+            autopct=None,
+            shadow=False, 
+            startangle=90
+            )
         self.fig.canvas.draw()

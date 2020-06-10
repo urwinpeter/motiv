@@ -1,5 +1,8 @@
-from motivate.models.database import QuotesDB
+# Third party imports
 from pubsub import pub
+# Local application imports
+from motivate.models.database import QuotesDB
+
 
 class QuoteService():
     def __init__(self):
