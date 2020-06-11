@@ -15,13 +15,15 @@ class ItemList(tk.LabelFrame):
         # TODO: Add xscroll
         for item in items:
             self.insert_item(item)
+        self.selection = None
 
     def insert_item(self, item, index=tk.END):
         text = f'{item.category}, {item.name}, {currency.currency_formatter(float(item.price))}'
         self.listbox.insert(index, text)
 
     def delete_item(self):
-        self.listbox.delete(self.selection, self.selection)
+        if self.selection:
+            self.listbox.delete(self.selection, self.selection)
 
     def update_item(self, item):
         self.delete_item()
