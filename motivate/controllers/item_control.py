@@ -4,14 +4,17 @@ import time
 # Local applications imports
 from motivate.logs import log_user_actions
 
-_log= logging.getLogger(__name__)
+_log= logging.getLogger('motivate.controllers.controller')
 
 
 class ItemController():
     def __init__(self, item_service):
         self.item_service = item_service
+
+    def get_items(self):
+        return self.item_service.get_items()
                     
-    @log_user_actions(_log)
+    @log_user_actions(_log) 
     def select_item(self, index):
         self.item_service.select_item(index)
     

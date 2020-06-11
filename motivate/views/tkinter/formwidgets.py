@@ -1,6 +1,7 @@
 # Standard library imports
 import tkinter as tk
 import tkinter.messagebox as mb
+from pubsub import pub 
 # Local application imports
 import motivate.currency as currency
 from motivate.item import Item
@@ -15,6 +16,7 @@ class ItemForm(tk.LabelFrame):
             master=master, 
             text='Modify An Item or Create Your Own'
             )
+        self.master = master
         # Create widgets             
         labels = [tk.Label(self, text=f) for f in self.form_fields]
         self.entries = [tk.Entry(self) for _ in self.form_fields]
@@ -68,16 +70,22 @@ class ItemForm(tk.LabelFrame):
         def _callback(event=None):
             item = self.get_item_details()
             if item:
+                self.master.update_item(item)
                 callback(item)
         self.update_button.bind(_callback)
 
     def bind_delete(self, callback):
-        self.delete_button.bind(callback)
+        def _callback(event=None):
+            self.remove_item_details()
+            self.master.delete_item()
+            callback()
+        self.delete_button.bind(_callback)
 
     def bind_save(self, callback):
-        def _callback():
+        def _callback(event=None):
             item = self.get_item_details()
             if item:
+                self.master.save_item(item)
                 callback(item)
         self.save_button.bind(_callback)
   

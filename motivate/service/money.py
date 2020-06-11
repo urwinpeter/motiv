@@ -40,6 +40,9 @@ class MoneyService():
             salary / (365 * 24 * 60 * 60)
             )
 
+    def set_initial_earnings(self):
+        self.earnings = 0  # This is here to trigger view being updated with initial earnings of 0. Does it really belong here?
+
     @property
     def earnings(self):
         return self._earnings
@@ -48,7 +51,6 @@ class MoneyService():
     def earnings(self, value):
         if value <= self._target:
             self._earnings = value
-    
             pub.sendMessage("money_changed", money=value)
         else:
             self._earnings = self._target

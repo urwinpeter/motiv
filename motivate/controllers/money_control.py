@@ -11,6 +11,7 @@ class MoneyController():
     
     def load(self, salary, price):
         self.money_service.set_user_values(salary, price)
+        self.money_service.set_initial_earnings()
         self.quote_service.get_quote()
         
     def start(self):

@@ -20,7 +20,7 @@ class ViewLifecycle():
             .on('home-start', lambda : self._money_control.start()) \
             .on('home-pause', lambda : self._money_control.pause_money()) \
             .on('home-reset', lambda : self._money_control.reset_money()) \
-            .start()
+            .start(self._item_control.get_items())
 
 
 class TkViewManager():
@@ -41,8 +41,8 @@ class TkViewManager():
                 self._commands[action] = command
             return self
 
-        def start(self):   
-            self._render_login()
+        def start(self, items):   
+            self._render_login(items)
             self._root.mainloop()
 
         def exit(self, name):
@@ -50,9 +50,9 @@ class TkViewManager():
             self._active_context.quit() # ?
             self._after_exit() # ?
 
-        def _render_login(self):
+        def _render_login(self, items):
             self._root.title("Settings")      
-            self._active_context = LoginPage(self._root, self._commands)
+            self._active_context = LoginPage(self._root, self._commands, items)
 
         def _render_home(self, price):
             self._root.title("Progress")

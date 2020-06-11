@@ -10,12 +10,12 @@ from motivate.views.tkinter.listwidgets import ItemList
 
 
 class LoginPage(tk.Frame):
-    def __init__(self, root, commands):
+    def __init__(self, root, commands, items):
         super().__init__(root)
         # Subscribe to updates
-        pub.subscribe(self.update_items, "item_changed")
+        pub.subscribe(self.select_item, "item_selected")
         # Create widgets
-        self.item_listbox = ItemList(self)
+        self.item_listbox = ItemList(self, items)
         self.item_form = ItemForm(self)
         self.salary_form = SalaryForm(self)
         self.next_button = Button(self, button_text='Next >')
@@ -41,18 +41,17 @@ class LoginPage(tk.Frame):
                 callback(salary, item)
         self.next_button.bind(_callback)
 
-    def update_items(self, items, selected_item):
-        self._remove_items()
-        self._load_items(items, selected_item)
+    def save_item(self, item):
+        self.item_listbox.insert_item(item)
 
-    def _remove_items(self):
-        self.item_form.remove_item_details()
-        self.item_listbox.clear_items()
-    
-    def _load_items(self, items, selected_item):
-        for item in items:
-            self.item_listbox.insert_item(item)
-        self.item_form.display_item_details(selected_item)
+    def update_item(self, item):
+        self.item_listbox.update_item(item)
+
+    def delete_item(self):
+        self.item_listbox.delete_item()
+
+    def select_item(self, item):
+        self.item_form.display_item_details(item)
 
 
 class HomePage(tk.Frame):
@@ -81,8 +80,6 @@ class HomePage(tk.Frame):
         self.earnings_form.bind_start(commands['home-start'])
         self.earnings_form.bind_pause(commands['home-pause'])
         self.earnings_form.bind_reset(commands['home-reset'])
-        # Set initial earnings
-        self.update_earnings(0) #? should money_service be doing this?
 
     def update_earnings(self, money):  
         self.earnings_form.update_earnings(money)
