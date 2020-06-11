@@ -15,19 +15,19 @@ class ItemController():
         return self.item_service.get_items()
                     
     @log_user_actions(_log) 
-    def select_item(self, index):
+    def on_item_select(self, index):
         self.item_service.select_item(index)
     
     @log_user_actions(_log)   
-    def create_item(self, new_item): 
+    def on_save_button_click(self, new_item): 
         self.item_service.create_item(new_item)
         
     @log_user_actions(_log)
-    def update_item(self, updated_item):
+    def on_update_button_click(self, updated_item):
         self.item_service.update_item(updated_item)
 
     @log_user_actions(_log)
-    def delete_item(self):
+    def on_delete_button_click(self):
         self.item_service.delete_item()
     
         

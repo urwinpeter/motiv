@@ -16,5 +16,6 @@ pip install -r requirements.txt
 Anticipate erroneous salary inputs
 Add xscroll to list widget
 Implement Logging of HomePage events
-Implement Pytests for Homepage events
+Implement Pytests
+Implement cron expressions to honour working hours
 ```

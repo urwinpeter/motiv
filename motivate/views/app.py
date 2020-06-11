@@ -12,14 +12,14 @@ class ViewLifecycle():
         
     def start_app(self):
         TkView = TkViewManager()
-        TkView.on('login-select', lambda index: self._item_control.select_item(index)) \
-            .on('login-update', lambda item: self._item_control.update_item(item)) \
-            .on('login-delete', lambda : self._item_control.delete_item()) \
-            .on('login-save', lambda item: self._item_control.create_item(item)) \
-            .on('login-next', lambda salary, price: self._money_control.load(salary, price)) \
-            .on('home-start', lambda : self._money_control.start()) \
-            .on('home-pause', lambda : self._money_control.pause_money()) \
-            .on('home-reset', lambda : self._money_control.reset_money()) \
+        TkView.on('login-select', lambda index: self._item_control.on_item_select(index)) \
+            .on('login-update', lambda item: self._item_control.on_update_button_click(item)) \
+            .on('login-delete', lambda : self._item_control.on_delete_button_click()) \
+            .on('login-save', lambda item: self._item_control.on_save_button_click(item)) \
+            .on('login-next', lambda salary, price: self._money_control.on_next_button_click(salary, price)) \
+            .on('home-start', lambda : self._money_control.on_start_button_click()) \
+            .on('home-pause', lambda : self._money_control.on_pause_button_click()) \
+            .on('home-reset', lambda : self._money_control.on_reset_button_click()) \
             .start(self._item_control.get_items())
 
 
