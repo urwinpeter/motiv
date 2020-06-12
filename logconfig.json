@@ -1,0 +1,60 @@
+{
+    "version": 1,
+    "formatters": {
+        "standard": {
+            "format": "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s" 
+        }
+    },
+    "handlers": {
+        "debug": {
+            "filename": "logdebug.log",
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        },
+        "info": {
+            "filename": "loginfo.log",
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        },
+
+        "warning": {
+            "filename": "logwarning.log",
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        },
+
+        "database": {
+            "filename": "logdatabase.log",
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "formatter": "standard"
+        }
+    },
+    "loggers": {
+        "": {
+            "handlers": ["debug", "info", "warning"],
+            "level": "DEBUG"
+        },
+        "__main__": {
+            "level": "DEBUG",
+            "propagate": true},
+        
+        "motivate.controllers.controller": {
+            "level": "DEBUG",
+            "propagate": true},
+
+        "motivate.models.database": {
+            "handlers": ["database"],
+            "level": "DEBUG",
+            "propagate": true},
+        
+        "motivate.item": {
+            "level": "DEBUG",
+            "propagate": true}
+        
+
+    }
+}

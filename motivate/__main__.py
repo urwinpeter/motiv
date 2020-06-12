@@ -1,13 +1,26 @@
-import tkinter as tk
-#from motivate.controllers.home(controller) import Controller
-from motivate.controllers.login import Controller
+# Standard library imports
+import json
+import logging.config
+# Local application imports
+from motivate.controllers.item_control import  ItemController
+from motivate.controllers.money_control import  MoneyController
+from motivate.service.money import MoneyService
+from motivate.service.items import ItemService
+from motivate.service.quote import QuoteService
+from motivate.views.app import ViewLifecycle
+
 
 def main():
-    root = tk.Tk()
-    root.geometry('500x500')
-    root.title("Let's Get Pumped!")
-    app = Controller(root)
-    root.mainloop()
+    with open('logconfig.json') as log_config:
+        logging.config.dictConfig(json.load(log_config))
+    log = logging.getLogger(__name__)
+    log.info('PROGRAMME START')
+
+    item_controller = ItemController(ItemService())
+    money_controller = MoneyController(MoneyService(), QuoteService())
+    ViewLifecycle(
+                item_controller, money_controller,
+                ).start_app()
 
 if __name__ == "__main__":
     main()
