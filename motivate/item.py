@@ -1,5 +1,8 @@
-import re
+# Standard library imports
 import logging
+import re
+# Local application imports
+import motivate.currency as currency
 from motivate.logs import log_user_item
 
 _log = logging.getLogger(__name__)
@@ -10,24 +13,27 @@ def matches(value, message, regex):
         raise ValueError(message)
     return value
 
-
 @log_user_item(_log, 'User Item Request:')
 class Item():
-    string_regex = re.compile(r"^\w+( +\w+)*$") # Accept alphanumeric characters with spaces and underscores
-    price_regex = re.compile(r"^\d+\.?\d{0,2}$") # Accept number in decimal form
+    # String Regex: accepts alphanumeric characters with spaces and underscores
+    # Price Regex: accepts decimal form
+    string_regex = re.compile(r"^\w+( +\w+)*$")
+    price_regex = re.compile(r"^\d+\.?\d{0,2}$")
 
     def __init__(self, category='', name='', price=''):
-        self.category = category 
+        self.category = category
         self.name = name
         self.price = price
-   
+
     @property
     def category(self):
         return self._category
 
     @category.setter
     def category(self, value):
-        self._category = matches(value, "Invalid Category Format", self.string_regex)
+        self._category = matches(
+            value, "Invalid Category Format", self.string_regex
+            )
 
     @property
     def name(self):
@@ -43,11 +49,14 @@ class Item():
 
     @price.setter
     def price(self, value):
-        self._price = matches(value, "Invalid price format", self.price_regex)
+        raw_value = currency.strip_currency_formatting(value)
+        self._price = matches(
+            raw_value, "Invalid price format", self.price_regex
+            )
 
 
 class DBItem():
-    def __init__(self, rowid = '', category='', name='', price=''):
+    def __init__(self, rowid, category, name, price):
         self.rowid = rowid
         self.category = category
         self.name = name
