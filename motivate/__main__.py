@@ -1,6 +1,5 @@
 # Standard library imports
 import json
-import locale
 import logging.config
 # Local application imports
 from motivate.controllers.item_control import  ItemController
@@ -16,11 +15,11 @@ def main():
         logging.config.dictConfig(json.load(log_config))
     log = logging.getLogger(__name__)
     log.info('PROGRAMME START')
-    
-    item_controller=ItemController(ItemService())
-    money_controller=MoneyController(MoneyService(), QuoteService())
+
+    item_controller = ItemController(ItemService())
+    money_controller = MoneyController(MoneyService(), QuoteService())
     ViewLifecycle(
-                item_controller, money_controller, 
+                item_controller, money_controller,
                 ).start_app()
 
 if __name__ == "__main__":

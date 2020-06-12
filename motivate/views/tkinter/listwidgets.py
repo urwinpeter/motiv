@@ -5,9 +5,9 @@ import motivate.currency as currency
 
 class ItemList(tk.LabelFrame):
     def __init__(self, master, items):
-        super().__init__(master, text = 'Select An Item')
+        super().__init__(master, text='Select An Item')
         self.master = master
-        self.listbox = tk.Listbox(self, height=14, width =30)
+        self.listbox = tk.Listbox(self, height=14, width=30)
         yscroll = tk.Scrollbar(self, command=self.listbox.yview)
         self.listbox.config(yscrollcommand=yscroll.set)
         yscroll.pack(side=tk.RIGHT, fill=tk.Y)
@@ -34,4 +34,3 @@ class ItemList(tk.LabelFrame):
             self.selection = self.listbox.curselection()[0]
             callback(self.selection)
         self.listbox.bind("<Double-Button-1>", _callback)
-            

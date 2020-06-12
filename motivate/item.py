@@ -15,14 +15,16 @@ def matches(value, message, regex):
 
 @log_user_item(_log, 'User Item Request:')
 class Item():
-    string_regex = re.compile(r"^\w+( +\w+)*$") # Accept alphanumeric characters with spaces and underscores
-    price_regex = re.compile(r"^\d+\.?\d{0,2}$") # Accept number in decimal form
+    # String Regex: accepts alphanumeric characters with spaces and underscores
+    # Price Regex: accepts decimal form
+    string_regex = re.compile(r"^\w+( +\w+)*$")
+    price_regex = re.compile(r"^\d+\.?\d{0,2}$")
 
     def __init__(self, category='', name='', price=''):
-        self.category = category 
+        self.category = category
         self.name = name
         self.price = price
-   
+
     @property
     def category(self):
         return self._category

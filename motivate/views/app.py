@@ -1,7 +1,7 @@
 # Standard library imports
 import tkinter as tk
+import tkinter.messagebox as mb
 # Local application imports
-from motivate.models.database import QuotesDB
 from motivate.views.tkinter.pages import LoginPage, HomePage
 
 
@@ -9,21 +9,21 @@ class ViewLifecycle():
     def __init__(self, item_controller, money_controller):
         self._item_control = item_controller
         self._money_control = money_controller
-        
+
     def start_app(self):
-        TkView = TkViewManager()
-        TkView.on('login-select', lambda index: self._item_control.on_item_select(index)) \
-            .on('login-update', lambda item: self._item_control.on_update_button_click(item)) \
-            .on('login-delete', lambda : self._item_control.on_delete_button_click()) \
-            .on('login-save', lambda item: self._item_control.on_save_button_click(item)) \
-            .on('login-next', lambda salary, price: self._money_control.on_next_button_click(salary, price)) \
-            .on('home-start', lambda : self._money_control.on_start_button_click()) \
-            .on('home-pause', lambda : self._money_control.on_pause_button_click()) \
-            .on('home-reset', lambda : self._money_control.on_reset_button_click()) \
+        tk_view = self.TkViewManager()
+        tk_view.on('login-select', self._item_control.on_item_select) \
+            .on('login-update', self._item_control.on_update_button_click) \
+            .on('login-delete', self._item_control.on_delete_button_click) \
+            .on('login-save', self._item_control.on_save_button_click) \
+            .on('login-next', self._money_control.on_next_button_click) \
+            .on('home-start', self._money_control.on_start_button_click) \
+            .on('home-pause', self._money_control.on_pause_button_click) \
+            .on('home-reset', self._money_control.on_reset_button_click) \
             .start(self._item_control.get_items())
 
 
-class TkViewManager():
+    class TkViewManager():
         def __init__(self):
             self._root = tk.Tk()
             self._commands = {}
@@ -31,8 +31,8 @@ class TkViewManager():
             self._root.geometry('800x350')
             self._after_exit = lambda: self._root.destroy
 
-        def on(self, action, command): 
-            if(action == 'login-next'):
+        def on(self, action, command):
+            if action == 'login-next':
                 def _next_internal(salary, item):
                     self._render_home(float(item.price))
                     command(salary, float(item.price))
@@ -41,7 +41,7 @@ class TkViewManager():
                 self._commands[action] = command
             return self
 
-        def start(self, items):   
+        def start(self, items):
             self._render_login(items)
             self._root.mainloop()
 
@@ -51,7 +51,7 @@ class TkViewManager():
             self._after_exit() # ?
 
         def _render_login(self, items):
-            self._root.title("Settings")      
+            self._root.title("Settings")
             self._active_context = LoginPage(self._root, self._commands, items)
 
         def _render_home(self, price):
@@ -60,7 +60,7 @@ class TkViewManager():
 
         def _notify(self, name):
             mb.showinfo(
-                        title='CONGRATULATIONS', 
-                        message=f"Enjoy your {name}",
-                        parent = self
-                        )
+                title='CONGRATULATIONS',
+                message=f"Enjoy your {name}",
+                parent=self
+                )

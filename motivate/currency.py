@@ -16,6 +16,3 @@ def append_currency_symbol(value):
 
 def number_formatter(value):
     return strip_currency_formatting(currency_formatter(value))
-
-
-

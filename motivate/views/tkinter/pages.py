@@ -20,7 +20,7 @@ class LoginPage(tk.Frame):
         self.salary_form = SalaryForm(self)
         self.next_button = Button(self, button_text='Next >')
         # Pack widgets
-        self.pack() 
+        self.pack()
         self.item_listbox.pack(side=tk.LEFT, padx=10, pady=10)
         self.item_form.pack(padx=10, pady=10)
         self.salary_form.pack(pady=10)
@@ -31,7 +31,7 @@ class LoginPage(tk.Frame):
         self.item_form.bind_delete(commands['login-delete'])
         self.item_form.bind_save(commands['login-save'])
         self.bind_next(commands['login-next'])
-  
+
     def bind_next(self, callback):
         def _callback(event=None):
             item = self.item_form.get_item_details()
@@ -62,14 +62,12 @@ class HomePage(tk.Frame):
         pub.subscribe(self.load_quote_text, "quote_ready")
         # Create and pack widgets
         self.earnings_form = EarningsForm(
-            item_price=price, 
+            item_price=price,
             master_widget=self
             )
         self.quote = tk.Message(
-            master=self,  
-            width=300, 
-            justify =tk.CENTER, 
-            font = ("Helvetica", 16, "bold italic")
+            master=self, width=300,
+            justify=tk.CENTER, font=("Helvetica", 16, "bold italic")
             )
         self.piechart = PieChart(self, price)
         self.pack()
@@ -81,10 +79,9 @@ class HomePage(tk.Frame):
         self.earnings_form.bind_pause(commands['home-pause'])
         self.earnings_form.bind_reset(commands['home-reset'])
 
-    def update_earnings(self, money):  
+    def update_earnings(self, money):
         self.earnings_form.update_earnings(money)
         self.piechart.update_chart(money)
 
     def load_quote_text(self, quote):
         self.quote.config(text=quote)
-        

@@ -1,5 +1,4 @@
-# Standard library imports
-import logging
+
 
 def log_user_actions(logger):
     def decorator(func):
@@ -15,8 +14,8 @@ def log_db_changes(logger):
         def wrapper(self, item):
             try:
                 func(self, item)
-                logger.debug(('DB Success:', func.__name__, item.__dict__))    
-            except: 
+                logger.debug(('DB Success:', func.__name__, item.__dict__))
+            except:
                 logger.warning(('DB Failure:', func.__name__, item.__dict__))
         return wrapper
     return decorator
@@ -28,8 +27,8 @@ def log_db_items(logger):
             try:
                 for item in func(self):
                     logger.debug(('DB Success:', func.__name__, item.__dict__))
-                    yield item     
-            except: 
+                    yield item
+            except:
                 logger.warning(('DB Failure:', func.__name__))
         return wrapper
     return decorator
@@ -38,11 +37,11 @@ def log_db_items(logger):
 def log_user_item(logger, title):
     def decorator(class_):
         def wrapper(*args, **kwargs):
-            try: 
+            try:
                 logger.info((title, *args))
                 return class_(*args, **kwargs)
-            except ValueError as e:
-                logger.warning(("Validation error", str(e), *args))
+            except ValueError as err:
+                logger.warning(("Validation error", str(err), *args))
                 raise
         return wrapper
     return decorator
